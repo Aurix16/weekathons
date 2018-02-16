@@ -1,1 +1,1 @@
-A list of projects that I take on weekly.
+A fun way to build a calculator using CSS grids.
