@@ -1,0 +1,65 @@
+body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+}
+
+a{
+    text-decoration: none;
+    color: yellowgreen;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    padding-top: 40%;
+    text-align: center;
+}
+
+@keyframes example {
+    0%   {height:0px}
+    100% {height:250px}  
+}
+
+label {
+    position: relative;
+    width: 5%;
+    margin: 0 auto;
+}
+
+#saber_handle {
+    cursor: pointer;
+    transform: rotate(-90deg);
+    height: 20px;
+}
+
+
+#hilt::before{
+    content: "";
+    position: absolute;
+    bottom: 73px;
+    left:51px;
+    width: 14px;
+    height: 0;
+    border-top-right-radius: 30px;
+    background: rgb(135, 220, 90);
+    background: linear-gradient(
+    to right, 
+    rgb(135, 220, 90) 0%, 
+    rgb(254, 254, 254) 30%, 
+    rgb(254, 254, 254) 50%, 
+    rgb(254, 254, 254) 70%, 
+    rgb(135, 220, 90) 100%
+  );
+    box-shadow: 0px 0px 6px rgb(135, 220, 90);
+}
+
+input[type="checkbox"]:checked + #hilt::before{
+    height: 250px;
+    animation-name: example;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+}
+
+input[type="checkbox"] {
+    visibility: hidden;
+}
