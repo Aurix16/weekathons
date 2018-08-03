@@ -39,7 +39,7 @@ $(document).ready(function(){
     }
 
     function skew(){
-        $('body').css({
+        $('#search').css({
             'webkitTransform': 'skew('+30+'deg)',
             '-webkit-transition': '0.5s ease-in'
         });
