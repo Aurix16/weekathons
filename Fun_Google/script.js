@@ -4,6 +4,10 @@ $(document).ready(function(){
         $('#search').css('box-shadow','0px 2px 1px 0.3px #c2c2c2');
     });
 
+    $('input[type="text"]').focusout(()=>{
+        $('#search').css('box-shadow','0px 0.5px 0px 0px rgb(126, 126, 126)');
+    });
+
     $(document).keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13'){
