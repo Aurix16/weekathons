@@ -1,5 +1,9 @@
 $(document).ready(function(){
     
+    $('input[type="text"]').focus(()=>{
+        $('#search').css('box-shadow','0px 2px 1px 0.3px #c2c2c2');
+    });
+
     $(document).keypress(function(event){
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if(keycode == '13'){
