@@ -1,3 +1,4 @@
 weekathons_workspace.code-workspace
 Css_Alien+Js/template.js
-quoteApp_server/server/node_modules
+quoteApp_server/node_modules
+quoteApp/node_modules
