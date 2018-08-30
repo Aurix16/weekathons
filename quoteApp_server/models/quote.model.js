@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 let quoteSchema = new Schema ({
     quote: {type: String, required: true},
-    author: {type: Number, required:true, max: 100},
+    author: {type: String, required:true, max: 100},
 });
 
 //Exporting the model
