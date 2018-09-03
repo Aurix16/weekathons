@@ -11,8 +11,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 const dotenv = require('dotenv').config();
 
 //Imports routes for the quotes
-const quote = require('./routes/quote.route'); 
+const quote = require('./routes/quote.route');
+const author = require('./routes/author.route');
 app.use('/quotes', quote);
+app.use('/authors', author);
 
 // Set up mongoose connection
 const mongoose = require('mongoose');

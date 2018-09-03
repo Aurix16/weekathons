@@ -8,7 +8,7 @@ const quote_controller = require('../controllers/quote.controller');
 router.get('/test', quote_controller.test);
 
 //CRUD routes
-router.post('/create', quote_controller.quote_create);
+router.post('/create_quote', quote_controller.quote_create);
 router.get('/:id', quote_controller.quote_details);
 router.put('/:id/update', quote_controller.quote_update);
 router.delete('/:id/delete', quote_controller.quote_delete);
