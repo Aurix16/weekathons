@@ -20,18 +20,18 @@ exports.author_create = (req, res)=>{
     })
 };
 
-exports.author_details = function (req, res) {
+exports.author_details = (req, res) => {
     Author.findById(req.params.id, function (err, product) {
         if (err) return (err);
         res.send(product);
     })
 };
 
-exports.getall_authors = function (req,res){
-    db.quotes.find({}).then((err, authors)=>{
+exports.author_all = (req, res) => {
+    Author.find({},{_id:0}).then((authors, err)=>{
         if (err) return err;
-        res.send("authors");
-    });
+        res.send(authors);
+    }).catch(e => {console.log("catch error",e)});
 };
 
 exports.author_update = function (req, res) {
@@ -45,5 +45,12 @@ exports.author_delete = function (req, res) {
     Author.findByIdAndRemove(req.params.id, function (err) {
         if (err) return next(err);
         res.send('Deleted successfully!');
+    });
+};
+
+exports.get_author_id = (req, res) => {
+    Author.find({author:req.params.name}, function(err, author){
+        if (err) return next(err);
+        res.send(author[0]._id);
     });
 };

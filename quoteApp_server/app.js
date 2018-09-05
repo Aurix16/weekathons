@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 //Use dotenv to read .env vars into Node
 const dotenv = require('dotenv').config();
 
-//Imports routes for the quotes
+//Imports routes for the quotes and authors
 const quote = require('./routes/quote.route');
 const author = require('./routes/author.route');
 app.use('/quotes', quote);
