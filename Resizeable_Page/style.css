@@ -1,0 +1,39 @@
+/* 
+TO DO:
+======
+
+1. See the video link below for how each <article> should look
+2. Make all three <article> elements equal width
+3. If any given <article> element gets to smaller than 300px, reshuffle the elements so there are only 2 or 1 <article> elements per row
+
+See https://res.cloudinary.com/bitkoin/video/upload/v1535438914/Untitled.mp4
+*/
+
+/* Add your CSS here */
+
+
+
+/* Some pre-filled styles/colours for you. Feel free to modify */
+
+body,
+button {
+  font-family: "Karla";
+}
+
+button[data-action="start"] {
+  background-color: lightgreen;
+}
+
+button[data-action="delete"] {
+  background-color: palevioletred;
+}
+
+section {
+  padding: 20px;
+}
+
+article {
+  background-color: #f2f5f8;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border: 1px solid #ececec;
+}
