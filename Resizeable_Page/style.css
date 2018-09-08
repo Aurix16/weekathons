@@ -10,22 +10,46 @@ See https://res.cloudinary.com/bitkoin/video/upload/v1535438914/Untitled.mp4
 */
 
 /* Add your CSS here */
+@media only screen and (max-width: 685px){
+  article{
+    width:100%;
+  }
+}
 
+@media only screen and (max-width:1330px) and (min-width: 685px){
+  article{
+    width:45%;
+    margin:none;
+  }
+}
 
+@media only screen and (max-width:2500px) and (min-width: 1330px){
+  article{
+    width:30%;
+  }
+}
 
 /* Some pre-filled styles/colours for you. Feel free to modify */
 
 body,
 button {
-  font-family: "Karla";
+  font-family: "Arial";
 }
 
 button[data-action="start"] {
   background-color: lightgreen;
+  border:none;
+  padding: 7px;
+  border-radius: 3px;
+  cursor: pointer;
 }
 
 button[data-action="delete"] {
   background-color: palevioletred;
+  border:none;
+  padding: 7px;
+  border-radius: 3px;
+  cursor: pointer;
 }
 
 section {
@@ -36,4 +60,9 @@ article {
   background-color: #f2f5f8;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   border: 1px solid #ececec;
+  border-radius: 5px;
+  padding-left: 15px;
+  padding-bottom: 15px;
+  float:left;
+  margin: 1%;
 }
