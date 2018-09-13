@@ -155,9 +155,202 @@ $(document).ready(function(){
             jnc(partA[0],partA[1]);
         }else if(code.search(/DEC/i) >=0){
             dec(code);
+        }else if(code.search(/LDS/i) >=0){
+            lds(code);
+        }else if(code.search(/LODSB/i) >=0){
+            lodsb(code);
+        }else if(code.search(/AAD/i) >=0){
+            aad(code);
+        }else if(code.search(/JNBE/i) >=0){
+            partA = code.split(",");
+            jnbe(partA[0],partA[1]);
+        }else if(code.search(/AAM/i) >=0){
+            aam(code);
+        }else if(code.search(/AAM/i) >=0){
+            IN(code);
         }
  
     });
+
+    function IN(code){
+        var input = code;
+        var word = (input.substring(3,5) === "AL") ? 0 : 1;
+        var port = input.substring(7);
+        var bin;
+        var hex;
+        var dec;
+        if(!input.match(/^IN\s(AL|AX),\s(DX|[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$/)) {
+            errorMsg("Incorrect instruction");
+        }
+        if(port == "DX") {
+            dec = 236 + word;
+            bin = dec.toString(2);
+            hex = dec.toString(16).toUpperCase();
+        } else {
+            dec = Number(port) + word;
+            bin = dec.toString(2) + " " + pad((+port).toString(2), 0, 8);
+            hex = dec.toString(16).toUpperCase() + " " + pad((+port).toString(16).toUpperCase());
+        }
+        hexF.text(hex);
+        binF.text(bin);
+    }
+
+    function aam(code){
+        p = code;
+        if (p == "AAM" || p =="aam"){
+            bin = "11010100";
+            bin2 = "00001010";
+            hex = parseInt(bin,2).toString(16);
+            hex2 = parseInt(bin2,2).toString(16);
+            
+            binValue = bin +" " + bin2;
+            hexValue = hex +" "+"0"+ hex2;
+
+            binF.text(binValue);
+            hexF.text(hexValue);
+        }
+        else if (p != "AAM"){
+            errorMsg("The mnemonic is invalid");
+        }
+    }
+
+    function jnbe(before, after){
+        var first = before;
+        var first2 = before.substring(4,7);
+        var hexto = parseInt(first2);
+        var txtJNBE = before.substring(0,4);
+        var last = after;
+        
+        if(txtJNBE == "JNBE" || txtJNBE == "jnbe"){
+            var last2 = parseInt(last);
+            var last3 = parseInt(last,16).toString(16);
+            var last4 = parseInt(last3,16);
+            var two="1";
+            var twoo= parseInt(two,10).toString(16);
+            var twooo= parseInt(twoo,16);
+            var binb = (twooo+last2);
+            var bina = binb - hexto;
+            var bina2 = parseInt(bina,16).toString(2);
+            var ff = "11111111";
+            var disp = "01110110";
+            var disp2 = ff - bina2;
+            var disp3 = parseInt(disp2,2).toString(16);
+            var disp4 = parseInt(disp,2).toString(16);
+            
+            bin = disp +" "+ disp2;
+            hex = disp4 +" "+ disp3;
+
+            binF.text(bin);
+            hexF.text(hex);
+        }else if(txtJNBE != "JNBE"){
+            errorMsg.text("Invalid code");
+            }
+    }
+
+    function aad(code){
+        var input = code;
+
+        var otherpart = input.substring(4);
+        testOP = parseInt(otherpart);
+        testAAD = input.search(/AAD/i); 
+
+        if (input=="AAD"|| input =="aad"||(testAAD >= 0)&&(testOP >= 0)){ 
+
+            var binary1 = "11010101"; 
+            var binary2 = "0000"; 
+            var binary3 = "1010"; 
+            var hexa1 = parseInt(binary1,2).toString(16); 
+            var hexa2 = parseInt(binary2,2).toString(16); 
+            var hexa3 = parseInt(binary3,2).toString(16); 
+
+            bin = binary1 + " " + binary2 + binary3; 
+            hex = hexa1 + " " + hexa2 + hexa3;
+
+            binF.text(bin);
+            hexF.text(hex);
+        }else{
+            errorMsg("Invalid input");
+        }
+    }
+
+    function lodsb(code){
+        var otherpart = code.substring(6);
+        testOP = parseInt(otherpart);
+        testAAD = code.search(/LODSB/i);
+
+        x = code.trim().toUpperCase();
+        if (x=="LODSB" || testOP >= 0)
+        {
+            dec = 172;
+            bin = dec.toString(2);
+            hex = dec.toString(16).toUpperCase();
+            hexF.text(hex);
+            binF.text(bin);
+        }else{
+            errorMsg('invalid instruction set');
+        }
+    }
+    
+    function lds(code){
+        var ax, bp;
+        var datainput = code.trim();
+        var str = datainput.substr(0, 3).toString().toUpperCase();
+        var mem = datainput.substr(7, datainput.length).toString().toUpperCase();
+        console.log(mem);
+        if (str == "LDS"||str == "lds") {
+            if (mem != "" ) {
+                var x = datainput.substr(4, 2);
+                var y = x.toString().toUpperCase();
+                switch (y) {
+                    case 'AX':
+                        ax = "1100010100000000";
+                        bp = "C5 00";
+                        break;
+                    case 'BX':
+                        ax = "1100010100011000";
+                        bp = "C5 18";
+                        break;
+                    case 'CX':
+                        ax = "1100010100001000";
+                        bp = "C5 08";
+                        break;
+                    case 'DX':
+                        ax = "1100010100010000";
+                        bp = "C5 10";
+                        break;
+                    case 'BP':
+                        ax = "1100010100101000";
+                        bp = "C5 28";
+                        break;
+                    case 'DI':
+                        ax = "1100010100111000";
+                        bp = "C5 38";
+                        break;
+                    case 'SI':
+                        ax = "1100010100110000";
+                        bp = "C5 30";
+                        break;
+                    case 'SP':
+                        ax = "1100010100100000";
+                        bp = "C5 20";
+                        break;
+
+                    default:
+                    errorMsg("Invalid Command");
+                } 
+                binF.text(ax);
+                hexF.text(bp);
+            }
+            else {
+                errorMsg("Error, No memory detected");
+
+            }
+        }
+        else {
+            errorMsg("Wrong Instruction inputed");
+
+        }
+    }
 
     function dec(code){
 
@@ -166,7 +359,7 @@ $(document).ready(function(){
             var y = x.includes(" ");
             var zopen = x.includes("[");
             var zclose = x.includes("]");
-            (y || (zopen === true && zclose === true)) ? compare(x) : errorMsg("invalid or incomplete mnemonics or instruction");;
+            (y || (zopen === true && zclose === true)) ? compare(x) : errorMsg("Invalid instruction");
 
         function menmonics(instr) {
             var first, second, third;
@@ -189,22 +382,12 @@ $(document).ready(function(){
     
         function generate(instr, instrlength) {
             instr = instr.trim();
-            //console.log
+            console.log(instr.length)
             switch (instr.length) {
-                case 2:
-                case 3:
-                    wordreg(instr);
-                    break;
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                    menmonics(instr);
-                    break;
+                case 3: wordreg(instr); break;
+                case 9: menmonics(instr); break;
                 default:
-                    errorMsg("invalid or incomplete mnemonics or instruction");
+                    errorMsg("Invalid instruction");
             }
         }
     
@@ -308,7 +491,7 @@ $(document).ready(function(){
                     generate(x.substring(3, x.length), x.length);
                     break;
                 default:
-                    errorMsg("invalid or incomplete mnemonics or instruction");
+                    errorMsg("Invalid instruction");
             }
         }
     }
