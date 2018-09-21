@@ -166,33 +166,141 @@ $(document).ready(function(){
             jnbe(partA[0],partA[1]);
         }else if(code.search(/AAM/i) >=0){
             aam(code);
-        }else if(code.search(/AAM/i) >=0){
+        }else if(code.search(/IN/i) >=0){
             IN(code);
+        }else if(code.search(/CALL/i) >=0){
+            partA = code.split(",");
+            call(partA[0],partA[1]);
         }
  
     });
 
+    function call(before, after){
+        var first = after;
+        var last = before;
+        var last1 = last.substring(5); 
+        var ff = "11111111";
+    
+        var Register = /(AX|BX|CX|DX|SI|SP)/i,
+            Number = /[0-9]/i,
+            Hex = /(A|B|C|D|E|F)/i,
+            Call = /CALL/i,
+            Space = / /i,
+            
+            testCall = last.search(Call),
+            testSpace = last.search(Space),
+            testRegisterL1 = last1.search(Register),
+            testNumberL1 = last1.search(Number),
+            testHexL1 = last1.search(Hex),
+            testNumberF1 = first.search(Number),
+            testHexF1 = first.search(Hex);
+        
+        if (testCall == 0 && testSpace == 4){
+            
+            if (testRegisterL1 >=0 && first == ""){
+                if (last1=="AX"||last1=="ax"){
+                    var ax = "11010000";
+                    var ax3 = parseInt(ff,2).toString(16);
+                    var ax2 = parseInt(ax,2).toString(16);
+                    binF.text(ff + " " + ax);
+                    hexF.text(ax3 +" "+ ax2);
+                }else if(last1=="BX"||last1=="bx"){
+                    var bx = "11010011";
+                    var bx3 = parseInt(ff,2).toString(16);
+                    var bx2 = parseInt(bx,2).toString(16);
+                    bin.F.text(ff + " " + bx);
+                    hexF.text(bx3 +" "+ bx2);
+            }else if (last1=="CX"||last1=="cx"){
+                    var cx = "11010001";
+                    var cx3 = parseInt(ff,2).toString(16);
+                    var cx2 = parseInt(cx,2).toString(16);
+                    binF.text(ff + " " + cx);
+                    hexF.text(cx3 +" "+ cx2);
+            } else if (last1=="DX"||last1=="dx"){
+                    var dx = "11010010";
+                    var dx3 = parseInt(ff,2).toString(16);
+                    var dx2 = parseInt(dx,2).toString(16);
+                    binF.text(ff + " " + dx);
+                    hexF.text(dx3 +" "+ dx2);
+            }else if (last1=="SI"||last1=="si"){
+                    var ex = "11010110";
+                    var ex3 = parseInt(ff,2).toString(16);
+                    var ex2 = parseInt(ex,2).toString(16);
+                    binF.text(ff + " " + ex);
+                    hexF.text(ex3 +" "+ ex2);
+            }else if (last1=="[SI]"||last1=="[si]"){
+                    var fx = "00010100";
+                    var fx3 = parseInt(ff,2).toString(16);
+                    var fx2 = parseInt(fx,2).toString(16);
+                    binF.text(ff + " " + fx);
+                    hexF.text(fx3 +" "+ fx2);
+            }else if (last1=="[BX]"||last1=="[bx]"){
+                    var gx = "00010111";
+                    var gx3 = parseInt(ff,2).toString(16);
+                    var gx2 = parseInt(gx,2).toString(16);
+                    binF.text(ff + " " + gx);
+                    hexF.text(gx3 +" "+ gx2);
+            }else if (last1=="[BX+SI]"||last1=="[bx+si]"){
+                    var hx = "00010000";
+                    var hx3 = parseInt(ff,2).toString(16);
+                    var hx2 = parseInt(hx,2).toString(16);
+                    binF.text(ff + " " + hx);
+                    hexF.text(hx3 +" "+ hx2);
+            }   
+        }else if ( (testNumberL1 >= 0 || testHexL1 >= 0) && (testNumberF1 >= 0 || testHexF1 >= 0) ){
+                    var E = "11101000";
+                    var E1 = parseInt(E,2).toString(16);
+                    var thr = "03";
+                    var thr1 = parseInt(thr,2).toString(16);
+                    var thr2 = parseInt(thr1);
+                    var first1 = parseInt(first);
+                    var last2 = parseInt(last1);
+                        if (last2 > first1){
+                        var f1 = parseInt(first1,16).toString(2);
+                        var l1 = parseInt(last2,16).toString(2); 
+                        var f2 = parseInt(f1);  
+                        var l2 = parseInt(l1); 
+                        var fl = f2 - l2;
+                        var fl1 = fl - thr2;
+                        var fl2 = parseInt(fl1,2).toString(16);
+                        binF.text(E + " " + fl1);
+                        hexF.text(E1 + " " + fl2);
+                        console.log(f2+" "+l2+" "+f1+" "+fl1+" "+fl2);
+                        }else{
+                            errorMsg("Invalid Command");
+                             }          
+                 }else {
+                    errorMsg("Please Enter a CALL instruction==");}
+        }else{
+            errorMsg("Invalid");}
+    }
+
     function IN(code){
         var input = code;
+        console.log(input);
         var word = (input.substring(3,5) === "AL") ? 0 : 1;
         var port = input.substring(7);
-        var bin;
-        var hex;
-        var dec;
+
         if(!input.match(/^IN\s(AL|AX),\s(DX|[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$/)) {
             errorMsg("Incorrect instruction");
-        }
-        if(port == "DX") {
+        }else if(port == "DX") {
             dec = 236 + word;
             bin = dec.toString(2);
             hex = dec.toString(16).toUpperCase();
-        } else {
+        }else {
             dec = Number(port) + word;
             bin = dec.toString(2) + " " + pad((+port).toString(2), 0, 8);
             hex = dec.toString(16).toUpperCase() + " " + pad((+port).toString(16).toUpperCase());
         }
         hexF.text(hex);
         binF.text(bin);
+
+        function pad(string, padstr, length) {
+            while(string.length < length) {
+                string = padstr + string;
+            }
+            return string;
+        }
     }
 
     function aam(code){
