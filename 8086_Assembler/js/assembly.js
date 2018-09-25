@@ -171,9 +171,239 @@ $(document).ready(function(){
         }else if(code.search(/CALL/i) >=0){
             partA = code.split(",");
             call(partA[0],partA[1]);
+        }else if(code.search(/CLD/i)>=0){
+            cld(code);
+        }else if(code.search(/JCXZ/i)>=0){
+            jcxz(code);
+        }else if(code.search(/IRET/i)>=0){
+            iret(code);
+        }else if(code.search(/IMUL/i)>=0){
+            imul(code);
         }
  
     });
+
+    function imul(code){
+    var test = code.toUpperCase();
+    var testIMUL = test.search(/IMUL/i);
+    var firstPart = test.substr(5,2);
+    var firstOp = firstPart.search(/ax/i);
+    var firstOp1 = firstPart.search(/al/i);
+    var comma = test.substr(7,1);
+    var secondPart = test.substr(8,code.length);
+        secondPart = secondPart.trim(" ");
+        if ((testIMUL>=0)&&(firstOp>=0)){
+            if (secondPart=="AX"){
+                var bin1="11110111";
+                var bin2="11101000";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="BX"){
+                var bin1="11110111";
+                var bin2="11101011";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="CX"){
+                var bin1="11110111";
+                var bin2="11101001";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="DX"){
+                var bin1="11110111";
+                var bin2="11101010";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="SP"){
+                var bin1="11110111";
+                var bin2="11101100";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="BP"){
+                var bin1="11110111";
+                var bin2="11101101";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                tbinF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="SI"){
+                var bin1="11110111";
+                var bin2="11101110";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="DI"){
+                var bin1="11110111";
+                var bin2="11101111";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+        
+            }
+            
+        }else if((testIMUL>=0)&&(firstOp1>=0)){
+            if (secondPart=="AL"){
+                var bin1="11110110";
+                var bin2="11101000";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="BL"){
+                var bin1="11110110";
+                var bin2="11101011";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="CL"){
+                var bin1="11110110";
+                var bin2="11101001";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="DL"){
+                var bin1="11110110";
+                var bin2="11101010";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="AH"){
+                var bin1="11110110";
+                var bin2="11101100";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="CH"){
+                var bin1="11110110";
+                var bin2="11101101";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="DH"){
+                var bin1="11110110";
+                var bin2="11101110";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+            }
+            else if (secondPart=="BH"){
+                var bin1="11110110";
+                var bin2="11101111";
+                var hex1=parseInt(bin1,2).toString(16);
+                var hex2=parseInt(bin2,2).toString(16);
+                
+                binF.text(bin1+" "+bin2);
+                hexF.text(hex1+" "+hex2);
+        
+        }
+            else{
+                errorMsg("Invalid Mnemonic format");
+            }
+        
+
+        
+        }
+    }
+
+    function iret(code){
+        var bin0,hex0,dec;
+        dec =207;
+        bin0= dec.toString(2);
+        hex0 = dec.toString(16);
+        var b = code;
+        var i =b.search("/IRET/i");
+
+        if( b=="IRET" || b=="iret"){
+            binF.text(bin0);
+            hexF.text(hex0);
+        }
+        else{
+            errorMsg("Invalid Command");
+        }
+    }
+
+    function jcxz(code){
+        function toHex(str) {
+            var hex = '';
+            for(var i=0;i<str.length;i++) {
+               hex += ''+str.charCodeAt(i).toString(16);
+            }
+            return hex;
+            }
+        
+            if (code=='jcxz'||code=='JCXZ'){
+                for (var i = 0; i < code.length; i++) {
+                    var result;
+                    result += code[i].charCodeAt(0).toString(2) + " ";
+                    binF.text(result);  
+                    }
+                 hexF.text(toHex(code));  
+            }else{
+                 errorMsg('Error: Command not correct');       
+            }
+    }
+
+    function cld(code){
+        var check = code;
+        
+        if (check=="CLD"||check=="cld"){
+            
+            var binary = "11111100"; 
+            var hexadecimal =  parseInt(binary, 2).toString(16); 
+            
+            hexF.text(hexadecimal);
+            binF.text(binary);
+            
+        }
+        else {
+           errorMsg("Invalid Input");
+             }
+    }
 
     function call(before, after){
         var first = after;
@@ -265,7 +495,6 @@ $(document).ready(function(){
                         var fl2 = parseInt(fl1,2).toString(16);
                         binF.text(E + " " + fl1);
                         hexF.text(E1 + " " + fl2);
-                        console.log(f2+" "+l2+" "+f1+" "+fl1+" "+fl2);
                         }else{
                             errorMsg("Invalid Command");
                              }          
@@ -277,7 +506,6 @@ $(document).ready(function(){
 
     function IN(code){
         var input = code;
-        console.log(input);
         var word = (input.substring(3,5) === "AL") ? 0 : 1;
         var port = input.substring(7);
 
