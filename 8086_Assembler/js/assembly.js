@@ -167,7 +167,7 @@ $(document).ready(function(){
         }else if(code.search(/AAM/i) >=0){
             aam(code);
         }else if(code.search(/IN/i) >=0){
-            IN(code);
+            diff(code);
         }else if(code.search(/CALL/i) >=0){
             partA = code.split(",");
             call(partA[0],partA[1]);
@@ -179,9 +179,551 @@ $(document).ready(function(){
             iret(code);
         }else if(code.search(/IMUL/i)>=0){
             imul(code);
+        }else if(code.search(/JNLE/i)>=0){
+            partA = code.split(",");
+            jnle(partA[0],partA[1]);
+        }else if(code.search(/JNZ/i)>=0){
+            jnz(code);
+        }else if(code.search(/JP/i)>=0){
+            partA = code.split(",");
+            jp(partA[0],partA[1]);
+        }else if(code.search(/SCAS/i)>=0){
+            scasw(code);
+        }else if(code.search(/JMP/i)>=0){
+            partA = code.split(",");
+            jmp(partA[0],partA[1]);
+        }else if(code.search(/INC/i)>=0){
+            diff(code);
+        }else if(code.search(/JO/i)>=0){
+            partA = code.split(",");
+            jo(partA[0],partA[1]);
+        }else if(code.search(/JLE/i)>=0){
+            partA = code.split(",");
+            jle(partA[0],partA[1]);
+        }else if(code.search(/HLT/i)>=0){
+            hlt(code);
+        }else if(code.search(/JE/i)>=0){
+            partA = code.split(",");
+            je(partA[0],partA[1]);
+        }else if(code.search(/CWD/i)>=0){
+            cwd(code);
+        }else if(code.search(/DAA/i)>=0){
+            daa(code);
+        }else if(code.search(/MUL/i)>=0){
+            mul(code);
         }
  
     });
+
+    function mul(code){
+        dec = 15;
+        dec1= 14;
+        hex1= dec1.toString(16)
+        bin1= dec1.toString(2);
+        bin = dec.toString(2);
+        hex = dec.toString(16);
+        r = code.trim();
+        var x = r.substr(4, 2);
+        var m = r.substr(0,3).toString().toUpperCase();
+        var y = x.toUpperCase();
+
+        if (m == "MUL" ){
+            switch (y) {
+                case 'AX':
+                    binF.text(bin + "0111" + "|" + bin1 + "0000");
+                    hexF.text(hex + "7" + "|" + hex1 + "0");
+                    break;
+                case 'CX':
+                    binF.text(bin + "0111" + "|" + bin1 + "0001");
+                    hexF.text(hex + "7" + "|" + hex1 + "1");
+                    break;
+                case 'BX':
+                    binF.text(bin + "0111" + "|" + bin1 + "0010");
+                    hexF.text(hex + "7" + "|" + hex1 + "2");
+                    break;
+                case 'DX':
+                    binF.text(bin + "0111" + "|" + bin1 + "0011");
+                    hexF.text(hex + "7" + "|" + hex1 + "3");
+                    break;
+                case 'SP':
+                    binF.text(bin + "0111" + "|" + bin1 + "0100");
+                    hexF.text(hex + "7" + "|" + hex1 + "4");
+                    break;
+                case 'BP':
+                    binF.text(bin + "0111" + "|" + bin1 + "0101");
+                    hexF.text(hex + "7" + "|" + hex1 + "5");
+                    break;
+                case 'SI':
+                    binF.text(bin + "0111" + "|" + bin1 + "0110");
+                    hexF.text(hex + "7" + "|" + hex1 + "6");
+                    break;
+                case 'DI':
+                    binF.text(bin + "0111" + "|" + bin1 + "0111");
+                    hexF.text(hex + "7" + "|" + hex1 + "7");
+                    break;
+                case 'AL':
+                    binF.text(bin + "0110" + "|" + bin1 + "0000");
+                    hexF.text(hex + "6" + "|" + hex1 + "0");
+                    break;
+                case 'CL':
+                    binF.text(bin + "0110" + "|" + bin1 + "0001");
+                    hexF.text(hex + "6" + "|" + hex1 + "1");
+                    break;
+                case 'BL':
+                    binF.text(bin + "0110" + "|" + bin1 + "0010");
+                    hexF.text(hex + "6" + "|" + hex1 + "2");
+                    break;
+                case 'DL':
+                    binF.text(bin + "0110" + "|" + bin1 + "0011");
+                    hexF.text(hex + "6" + "|" + hex1 + "3");
+                    break;
+                case 'AH':
+                    binF.text(bin + "0110" + "|" + bin1 + "0100");
+                    hexF.text(hex + "6" + "|" + hex1 + "4");
+                    break;
+                case 'CH':
+                    binF.text(bin + "0110" + "|" + bin1 + "0101");
+                    hexF.text(hex + "6" + "|" + hex1 + "5");
+                    break;
+                case 'DH':
+                    binF.text(bin + "0110" + "|" + bin1 + "0110");
+                    hexF.text(hex + "6" + "|" + hex1 + "6");
+                    break;
+                case 'BH':
+                    binF.text(bin + "0110" + "|" + bin1 + "0111");
+                    hexF.text(hex + "6" + "|" + hex1 + "7");
+                    break;
+                default:
+                    errorMsg("INCORRECT INPUT !!!");
+            }
+        }else{
+            errorMsg("PLEASE ENTER THE CORRECT INSTRUCTION SET 'MUL'");
+        }
+    }
+
+    function daa(code){
+        var input = code;
+        var searchInput = input.toUpperCase();
+        var dec = 39;
+        var bin = dec.toString(2);
+        var hex = dec.toString(16);
+
+       if(searchInput == "DAA" && isNaN(searchInput) ) {
+           binF.text("00" + bin);
+           hexF.text(hex);
+       }else{
+           errorMsg(" input valid instruction set");
+
+       }
+    }
+
+    function cwd(code){
+
+        var thecode=code;
+        var codeword=thecode.substring(0,3).toUpperCase();
+        if(thecode == ""){
+            errorMsg("this field cannot be empty");
+        }
+        else if(codeword !="CWD"){
+            errorMsg("Wrong Mnemonic");
+        } else{
+            hexF.text("99");
+            binF.text("1001 1001");
+        }
+    }
+
+    function je(before, after){
+        var inputOne = before;
+        var firstPart = inputOne.substr(0,3);
+        var z = inputOne.search(/JE/i);
+        var otherPart = inputOne.substr(4,3);
+        var otherPartInt = parseInt(otherPart);
+
+        var secondInput = after
+        secondInputInt = parseInt(secondInput);
+
+        var subtract = (secondInputInt) - (otherPartInt );
+        var divide =  subtract / 2 ;
+        var eben = 255 -  (divide);
+        var bindec = 116;
+        var binbin = bindec.toString(2);
+        var binhex = bindec.toString(16);
+
+        var boy = eben.toString(16);
+        var  girl =eben.toString(2);
+        if((z >= 0) && (otherPartInt >= 0)) {
+            binF.text(girl + "" + "" + "/" + binbin);
+            hexF.text(boy + " " + " " + "" + binhex);
+        }
+
+        else{
+            errorMsg('invalid input');
+        }
+
+    }
+
+    function hlt(code){
+        x = code.toUpperCase();
+        var y = x.substr(0,3).toString().toUpperCase();
+
+     if (y=="HLT"){
+        dec = 244;
+        bin = dec.toString(2);
+        hex = dec.toString(16).toUpperCase();
+        binF.text(bin);
+        hexF.text(hex);
+     }else{
+        errorMsg('invalid instruction set');
+     }
+    }
+
+    function jle(before, after){
+        var inputOne = before;
+        var firstPart = inputOne.substr(0,3);
+        var z = inputOne.search(/JLE/i);
+        var otherPart = inputOne.substr(4,3);
+        var otherPartInt = parseInt(otherPart);
+
+        var secondInput = after;
+        secondInputInt = parseInt(secondInput);
+
+        var subtract = (secondInputInt) - (otherPartInt );
+        var divide =  subtract / 2 ;
+        var eben = 255 -  (divide);
+        var bindec = 126;
+        var binbin = bindec.toString(2);
+        var binhex = bindec.toString(16);
+
+        var boy = eben.toString(16);
+        var  girl =eben.toString(2);
+           if((z >= 0) && (otherPartInt >= 0))
+           {
+                binF.text(binbin+ " " + " " + "" +  girl);
+                hexF.text(binhex+ " " + " " + "" + boy);
+           }else{
+                errorMsg('invalid input');
+           }
+
+    }
+
+    function jo(before, after){
+        var inputOne = before;
+        var firstPart = inputOne.substr(0,2);
+        var z = inputOne.search(/JO/i);
+        var otherPart = inputOne.substr(3,3);
+        var otherPartInt = parseInt(otherPart);
+
+        var secondInput = after;
+        secondInputInt = parseInt(secondInput);
+
+        var subtract = (secondInputInt) - (otherPartInt );
+        var divide =  subtract / 2 ;
+        var eben = 255 -  (divide);
+        var bindec = 112;
+        var binbin = bindec.toString(2);
+        var binhex = bindec.toString(16);
+
+        var boy = eben.toString(16);
+        var girl =eben.toString(2);
+           if((z >= 0) && (otherPartInt >= 0)){
+               binF.text(binbin+ " " + " " + "" + girl);
+               hexF.text(binhex + " " + " " + "" + boy);
+           }
+
+        else{
+             errorMsg('invalid input');
+           }
+    }
+
+    function diff(code){
+        code = code.toUpperCase();
+        if(code.substring(0,3)==="INC"){
+            inc(code);
+        }else if(code.substring(0,3)==="IN "){
+            IN(code);
+        }
+    }
+
+    function inc(code){
+        error (); 
+        var checkhigh= assemble(); 
+        var regh = checkhigh.substring(4,6);
+        var binl = "01000";   
+        var hexl = "4";     
+
+        if ( regh == "AX" || regh == "ax" ){
+            binl = binl + "000";
+            hexl = hexl + "0";
+            binF.text(binl);
+            hexF.text(hexl);   
+        }
+
+        if ( regh == "CX" || regh == "cx" ){
+            binl = binl + "001";
+            hexl = hexl + "1";
+            binF.text(binl);
+            hexF.text(hexl);   
+        }
+
+        if ( regh == "DX" || regh == "dx" ){
+            binl = binl + "010";
+            hexl = hexl + "2";
+            binF.text(binl);
+            hexF.text(hexl);   
+        }
+
+        if ( regh == "BX" || regh == "bx" ){
+            binl = binl + "011";
+            hexl = hexl + "3";
+            binF.text(binl);
+            hexF.text(hexl);   
+        }
+
+        if ( regh == "SP" || regh == "sp" ){
+            binl = binl + "100";
+            hexl = hexl + "4";
+            binF.text(binl);
+            hexF.text(hexl);   
+        }
+
+        if ( regh == "BP" || regh == "bp" ){
+            binl = binl + "101";
+            hexl = hexl + "5";
+            binF.text(binl);
+            hexF.text(hexl);  
+        }
+
+        if ( regh == "SI" || regh == "si" ){
+            binl = binl + "110";
+            hexl = hexl + "6";
+            binF.text(binl);
+            hexF.text(hexl);   
+        }
+
+        if ( regh == "DI" || regh == "di" ){
+            binl = binl + "111";
+            hexl = hexl + "7";
+            binF.text(binl);
+            hexF.text(hexl);   
+        }
+
+        function assemble(){
+            var cod = code; 
+            return cod;  
+        }
+
+        function error(){
+            var checkcod = assemble();
+            var mnemonic = checkcod.substring(0,3);
+            var checkInc = mnemonic.toUpperCase();    
+            if (checkInc != "INC")
+            {
+                errorMsg("sorry, you are only allowed to convert mnemonic INC");
+            }
+            else{
+                var space = checkcod.substring(3,4);
+                if ( space != " "){
+                    errorMsg("sorry, there is supposed to be a space before the operand");
+                }
+            }
+        }
+
+        function start(){
+            error(); 
+            var getcod = assemble();
+            var checkreg = getcod.substring(4,6); 
+            var w = "0" ;  
+            var mod = "11"; 
+            var hex= "FE" + " " + "C";    
+            var bin= "1111111" + w + " " + mod + "000";   
+
+            if ( checkreg == "AL" || checkreg == "al" ){  
+                bin = bin + "000";
+                hex = hex + "0"  ;
+                binF.text(bin);
+                hexF.text(hex);  
+            }else if ( checkreg == "CL" || checkreg == "cl" ){
+                bin = bin + "001";
+                hex = hex + "1"  ;
+                binF.text(bin);
+                hexF.text(hex);   
+            }else if ( checkreg == "DL" || checkreg == "dl" ){
+                bin = bin + "010";
+                hex = hex + "2"; 
+                binF.text(bin);
+                hexF.text(hex); 
+            } else if ( checkreg == "BL" || checkreg ==  "bl" ){
+                bin = bin + "011";
+                hex = hex + "3";
+                binF.text(bin);
+                hexF.text(hex); 
+            }else if ( checkreg == "AH" || checkreg == "ah" ){
+                bin = bin + "100";
+                hex = hex + "4";
+                binF.text(bin);
+                hexF.text(hex);
+            }else if ( checkreg == "CH" || checkreg == "ch" ){
+                bin = bin + "101";
+                hex = hex + "5"; 
+                binF.text(bin);
+                hexF.text(hex); 
+            }else if ( checkreg == "DH" || checkreg == "dh" ){
+                bin = bin + "110";
+                hex = hex + "6";  
+                binF.text(bin);
+                hexF.text(hex); 
+            }else if ( checkreg == "BH" || checkreg == "bh" ){
+                bin = bin + "111";
+                hex = hex + "7";
+                binF.text(bin);
+                hexF.text(hex); 
+            }
+        }  
+    }
+
+    function jmp(before, after){
+        var inputOne = before.trim();
+        var firstPart = inputOne.substr(0,3);
+        var z = inputOne.search(/JMP/i);
+
+        var otherPart = inputOne.substr(4,3);
+        var otherPartInt = parseInt(otherPart);
+
+        var secondInput = after;
+        secondInputInt = parseInt(secondInput);
+
+        var subtract = (secondInputInt) - (otherPartInt );
+        var divide =  subtract / 2 ;
+        var eben = 255 -  (divide);
+        var bindec = 235;
+        var binbin = bindec.toString(2);
+        var binhex = bindec.toString(16);
+
+        var boy = eben.toString(16);
+        var  girl =eben.toString(2);
+        if((z >= 0) && (otherPartInt >= 0)){
+            binF.text(girl + "" + "" + "/" + binbin);
+            hexF.text(boy + " " + " " + "" + binhex);
+        }else{
+            errorMsg('invalid input');
+        }
+    }
+
+    function scasw(code){
+        var dec, hex, bin, x, y, hex1, bin1;
+        dec = 174;
+        dec1 = 175;
+        bin = dec.toString(2);
+        bin1 = dec1.toString(2);
+        hex = dec.toString(16);
+        hex1 = dec1.toString(16);
+        x = code.trim();
+        var r = x.substr(5, 2).toString().toUpperCase()
+        var m = x.substr(0,4).toString().toUpperCase();
+        y = m.toUpperCase();
+        if (m = "SCAS") {
+            switch(r){
+                case 'AX':
+                case 'BX':
+                case 'CX':
+                case 'DX':
+                case 'SP':
+                case 'BP':
+                case 'SI':
+                case 'DI':
+                    binF.text(bin1);
+                    hexF.text(hex1);
+                    break;
+                case 'AL':
+                case 'BL':
+                case 'CL':
+                case 'DL':
+                case 'AH':
+                case 'BH':
+                case 'CH':
+                case 'DH':
+                    binF.text(bin);
+                    hexF.text(hex);
+                    break;
+                default:
+                    errorMsg("Invalid Instruction set!!!");
+            }
+        }else{
+            errorMsg("Invalid Instruction set. Make sure its 'SCAS'");
+        }
+    }
+
+    function jp(before, after){
+        var inputOne = before;
+        var z = inputOne.search(/JP/i);
+        var otherPart = inputOne.substr(4,2);
+        var otherPartInt = parseInt(otherPart);
+
+        var secondInput = after;
+        secondInputInt = parseInt(secondInput);
+
+        var subtract = (secondInputInt) - (otherPartInt );
+        var divide =  subtract / 2 ;
+        var eben = 255 -  (divide);
+        var bindec = 122;
+        var binbin = bindec.toString(2);
+        var binhex = bindec.toString(16);
+
+        var boy = eben.toString(16);
+        var girl =eben.toString(2);
+           if((z >= 0) && (otherPartInt >= 0)){
+               binF.text(girl + "" + "" + "/" + binbin);
+               hexF.text(boy + " " + " " + "" + binhex);
+           }else{
+              errorMsg('invalid input');
+           }
+    }
+
+    function jnz(code){
+        function pad(string, padstr, length) {
+            while(string.length < length) {
+                string = padstr + string;
+            }
+            return string;
+        }
+        var regb = {"AX":"0","AL":"0","CX":"1","CL":"1","DX":"2","DL":"2","BX":"3","BL":"3","SP":"4","AH":"4","BP":"5","CH":"5","SI":"6","DH":"6","DI":"7","BH":"7"};
+        var value = code.toUpperCase();
+        if (regb[value.substring(4)] && value.substring(0,4) == "JNZ ") {
+            var rega = regb[value.substring(4)];
+            binF.text("01110101 " + pad((+rega).toString(2), 0, 8));
+            hexF.text("75 " + "0" + (+rega));
+        }else {
+            errorMsg("Incomplete mnemonic or instruction");
+        }
+    }
+
+    function jnle(before, after){
+        var inputOne = before;
+        var firstPart = inputOne.substr(0,4);
+        var z = inputOne.search(/JNLE/i);
+        var otherPart = inputOne.substr(5,3);
+        var otherPartInt = parseInt(otherPart);
+
+        var secondInput = after;
+        secondInputInt = parseInt(secondInput);
+
+        var subtract = (secondInputInt) - (otherPartInt );
+        var divide =  subtract / 2 ;
+        var eben = 255 -  (divide);
+        var bindec = 127;
+        var binbin = bindec.toString(2);
+        var binhex = bindec.toString(16);
+
+        var boy = eben.toString(16);
+        var  girl =eben.toString(2);
+           if((z >= 0) && (otherPartInt >= 0))
+           {
+               binF.text(girl + "" + "" + "/" + binbin); 
+               hexF.text(boy + " " + " " + "" + binhex);
+           }else{
+                errorMsg('invalid input');
+            }
+    }
 
     function imul(code){
     var test = code.toUpperCase();
@@ -508,6 +1050,8 @@ $(document).ready(function(){
         var input = code;
         var word = (input.substring(3,5) === "AL") ? 0 : 1;
         var port = input.substring(7);
+        var hex;
+        var bin;
 
         if(!input.match(/^IN\s(AL|AX),\s(DX|[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$/)) {
             errorMsg("Incorrect instruction");
