@@ -211,9 +211,181 @@ $(document).ready(function(){
             daa(code);
         }else if(code.search(/MUL/i)>=0){
             mul(code);
+        }else if(code.search(/LOOPE/i)>=0){
+            partA = code.split(",");
+            loope(partA[0],partA[1]);
+        }else if(code.search(/JBE/i)>=0){
+            partA = code.split(",");
+            jbe(partA[0],partA[1]);
+        }else if(code.search(/NEG/i)>=0){
+            neg(code);
         }
  
     });
+
+    function neg(code){
+        dec = 15;
+        dec1= 13;
+        bin = dec.toString(2);
+        bin1 = dec1.toString(2);
+        hex1 =dec1 .toString(16);
+        hex = dec.toString(16);
+        r = code.trim();
+        var x = r.substr(4, 2).toString().toUpperCase();
+        var m = r.substr(0, 3).toString().toUpperCase();
+        var y = x.toUpperCase();
+
+        if (m == "NEG") {
+            switch (y) {
+                case 'AX':
+                    binF.text(bin + "0111" + "|" + bin1 + "1000");
+                    hexF.text(hex + "7" + "|" + hex1 + "8");
+                    break;
+
+                case 'CX':
+                    binF.text(bin + "0111" + "|" + bin1 + "1001");
+                    hexF.text(hex + "7" + "|" + hex1 + "9");
+                    break;
+
+                case 'BX':
+                    binF.text(bin + "0111" + "|" + bin1 + "1010");
+                    hexF.text(hex + "7" + "|" + hex1 + "a");
+                    break;
+
+                case 'DX':
+                    binF.text(bin + "0111" + "|" + bin1 + "1011");
+                    hexF.text(hex + "7" + "|" + hex1 + "b");
+                    break;
+
+                case 'SP':
+                    binF.text(bin + "0111" + "|" + bin1+ "1100");
+                    hexF.text(hex + "f" + "|" + hex1 + "c");
+                    break;
+
+                case 'BP':
+                    binF.text(bin + "0111" + "|" + bin1 + "1101");
+                    hexF.text(hex + "7" + "|" + hex1 + "d");
+                    break;
+
+                case 'SI':
+                    binF.text(bin + "0111" + "|" + bin1 + "1110");
+                    hexF.text(hex + "7" + "|" + hex1 + "e");
+                    break;
+
+                case 'DI':
+                    binF.text(bin + "0111" + "|" + bin1 + "1111");
+                    hexF.text(hex + "f" + "|" + hex1+ "f");
+                    break;
+
+                case 'AL':
+                    binF.text(bin + "0110" + "|" + bin1 + "1000");
+                    hexF.text(hex + "6" + "|" + hex1 + "8");
+                    break;
+
+                case 'CL':
+                    binF.text(bin + "0110" + "|" + bin1 + "1001");
+                    hexF.text(hex + "6" + "|" + hex1 + "9");
+                    break;
+                
+                case 'BL':
+                    binF.text(bin + "0110" + "|" + bin1 + "1010");
+                    hexF.text(hex + "6" + "|" + hex1 + "a");
+                    break;
+
+                case 'DL':
+                    binF.text(bin + "0110" + "|" + bin1 + "1011");
+                    hexF.text(hex + "6" + "|" + hex1 + "b");
+                    break;
+
+                case 'AH':
+                    binF.text(bin + "0110" + "|" + bin1 + "1100");
+                    hexF.text(hex + "6" + "|" + hex + "c");
+                    break;
+
+                case 'CH':
+                    binF.text(bin + "0110" + "|" + bin1 + "1101");
+                    hexF.text(hex + "6" + "|" + hex1 + "d");
+                    break;
+
+                case 'DH':
+                    binF.text(bin + "0110" + "|" + bin1 + "1110");
+                    hexF.text(hex + "6" + "|" + hex1 + "e");
+                    break;
+
+                case 'BH':
+                    binF.text(bin + "0110" + "|" + bin1 + "1111");
+                    hexF.text(hex + "6" + "|" + hex1 + "f");
+                    break;
+
+                default: errorMsg("Invalid mnemonics");
+            }
+        }else {
+            errorMsg("Invalid mnemonics");
+        }
+
+    }
+
+    function jbe(before, after){
+        var inputOne = before;
+           var firstPart = inputOne.substr(0,3);
+           var z = inputOne.search(/JBE/i);
+           var otherPart = inputOne.substr(4,3);
+           var otherPartInt = parseInt(otherPart);
+
+           var secondInput = after;
+           secondInputInt = parseInt(secondInput);
+           var subtract;
+        
+            if ((otherPartInt) > (secondInputInt)){ 
+                subtract = (otherPartInt) - (secondInputInt);
+            }else{   subtract = (secondInputInt) - (otherPartInt);}		   
+		 
+           var divide =  subtract / 2 ;
+           var eben = 255 -  (divide);
+           var bindec = 118;
+           var binbin = bindec.toString(2);
+           var binhex = bindec.toString(16);
+
+          var boy = eben.toString(16);
+          var  girl =eben.toString(2);
+            if((z >= 0) && (otherPartInt >= 0)){
+
+
+                binF.text(girl + " " + " " + " "+ binbin);
+                hexF.text(boy + " " + " " + " " + binhex); 
+            }else{
+                errorMsg('invalid input');
+            }
+    }
+
+    function loope(before, after){
+        var inputOne = before
+
+        var z = inputOne.search(/LOOPE/i);
+
+        var otherPart = inputOne.substr(6,3);
+        var otherPartInt = parseInt(otherPart);
+
+        var secondInput = after;
+        secondInputInt = parseInt(secondInput);
+
+        var subtract = (secondInputInt) - (otherPartInt );
+        var divide =  subtract / 2 ;
+        var eben = 255 -  (divide);
+        var bindec = 225;
+        var binbin = bindec.toString(2);
+        var binhex = bindec.toString(16);
+
+        var boy = eben.toString(16);
+        var  girl =eben.toString(2);
+            if((z >= 0) && (otherPartInt >= 0)){
+                binF.text(girl + "" + "" + "/" + binbin);
+                hexF.text(boy + " " + " " + "" + binhex);
+            }
+            else{
+                errorMsg('invalid input');
+            }
+    }
 
     function mul(code){
         dec = 15;
