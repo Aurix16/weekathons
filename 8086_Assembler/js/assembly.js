@@ -232,9 +232,8 @@ $(document).ready(function(){
             diff_jng(code);
         }else if(code.search(/SAR/i)>=0){
             sar(code);
-        }else if(code.search(/JNAE/i)>=0){
-            partA = code.split(",");
-            jnae(partA[0],partA[1]);
+        }else if(code.search(/JNA/i)>=0){
+            diff_jna(code);
         }else if(code.search(/JNO/i)>=0){
             partA = code.split(",");
             jno(partA[0],partA[1]);
@@ -262,8 +261,197 @@ $(document).ready(function(){
             movsw(code);
         }else if(code.search(/JNE/i)>=0){
             jne(code);
+        }else if(code.search(/LES/i)>=0){
+            les(code);
+        }else if(code.search(/NOP/i)>=0){
+            nop(code);
+        }else if(code.search(/CBW/i)>=0){
+            cbw(code);
+        }else if(code.search(/POP/i)>=0){
+            pop(code);
         }
     });
+
+    function pop(code){
+        var datainput = code.trim();
+        var str = datainput.substr(0, 3).toString().toUpperCase();
+
+        if (str == "POP") {
+            var x = datainput.substr(4, 2);
+            var y = x.toString().toUpperCase();
+            switch (y) {
+                case 'AX':
+                    ax = "01011000";
+                    bp = "58";
+                    break;
+
+                case 'BX':
+                    ax = "01011011";
+                    bp = "5B";
+                    break;
+
+                case 'CX':
+                    ax = "01011001";
+                    bp = "59";
+                    break;
+
+                case 'DX':
+                    ax = "01011010";
+                    bp = "5A";
+                    break;
+
+                case 'BP':
+                    ax = "01011101";
+                    bp = "5D";
+                    break;
+
+                case 'DI':
+                    ax = "01011111";
+                    bp = "5F";
+                    break;
+
+                case 'SI':
+                    ax = "01011110";
+                    bp = "5E";
+                    break;
+
+                case 'SP':
+                    ax = "01011100";
+                    bp = "5C";
+                    break;
+
+                case '':
+                    ax = "1000111100000000";
+                    bp = "8F 00";
+                    break;
+
+                default:
+                    errorMsg("invalid mnemonics");
+            }
+            binF.text(ax);
+            hexF.text(bp);
+        }else{
+            errorMsg("invalid instruction inputted");
+        }
+    }
+    
+    function diff_jna(code){
+        code = code.toUpperCase();
+        if (code.substring(0,4)==="JNA "){
+            jna(code);
+        }else if(code.substring(0,4)==="JNAE"){
+            partA = code.split(",");
+            jnae(partA[0],partA[1]);
+        }
+    }
+
+    function jna(code){
+        function pad(string, padstr, length) {
+            while(string.length < length) {
+                string = padstr + string;
+            }
+            return string;
+        }
+
+        var regb = {"AX":"0","AL":"0","CX":"1","CL":"1","DX":"2","DL":"2","BX":"3","BL":"3","SP":"4","AH":"4","BP":"5","CH":"5","SI":"6","DH":"6","DI":"7","BH":"7"};
+        var value = code.toUpperCase();
+        console.log(regb[value.substring(4)]);
+        if (regb[value.substring(4)] && value.substring(0,4) == "JNA ") {
+            var rega = regb[value.substring(4)];
+            binF.text("01110110 " + pad((+rega).toString(2), 0, 8));
+            hexF.text("76 " + "0" + (+rega));
+        } else {
+            errorMsg("Incomplete mnemonic or instruction");
+        }
+    }
+
+    function cbw(code){
+        var Input = code.trim();
+        var binary = 10011000;  
+        var hex = parseInt(binary,2).toString(16).toUpperCase();    
+			
+			if(Input=="CBW"||Input=="cbw"){
+			binF.text(binary);
+			hexF.text(hex);
+			}else{
+				errorMsg("The input command is CBW in upper or lower case.");
+			}
+    }
+
+    function nop(code){
+        x = code.trim().toUpperCase();
+            var y = x.substr(0,3).toString().toUpperCase();
+            if (y=="NOP"){
+                dec = 144;
+                bin = dec.toString(2);
+                hex = dec.toString(16).toUpperCase();
+                binF.text(bin);
+                hexF.text(hex);
+            }else{
+                errorMsg('invalid instruction set');
+            }
+    }
+
+    function les(code){
+        var ax, bp;
+        var datainput = code.trim();
+        var str = datainput.substr(0, 3).toString().toUpperCase();
+        var mem = datainput.substr(7, 3).trim().toString().toUpperCase();
+
+        if (str == "LES") {
+            if (mem == "M") {
+                var x = datainput.substr(4, 2);
+                var y = x.toString().toUpperCase();
+                switch (y) {
+                    case 'AX':
+                        ax = "11000100 00000000";
+                        bp = "C4 00";
+                        break;
+                    case 'BX':
+                        ax = "11000100 00011000";
+                        bp = "C4 18";
+                        break;
+                    case 'CX':
+                        ax = "11000100 00001000";
+                        bp = "C4 08";
+                        break;
+                    case 'DX':
+                        ax = "11000100 00010000";
+                        bp = "C4 10";
+                        break;
+                    case 'BP':
+                        ax = "11000100 00101000";
+                        bp = "C4 28";
+                        break;
+                    case 'DI':
+                        ax = "11000100 00111000";
+                        bp = "C4 38";
+                        break;
+                    case 'SI':
+                        ax = "11000100 00110000";
+                        bp = "C4 30";
+                        break;
+                    case 'SP':
+                        ax = "11000100 00100000";
+                        bp = "C4 20";
+                        break;
+
+                    default:
+                        ax = "invalid mnemonics ";
+                        bp = "invalid mnemonics  ";
+                }
+                binF.text(ax);
+                hexF.text(bp);
+
+            }else {
+                errorMsg("This instruction requires memory");
+
+            }
+        }else {
+            errorMsg("invalid instruction inputted");
+        }
+
+    }
 
     function jne(code){
         function pad(string, padstr, length) {
