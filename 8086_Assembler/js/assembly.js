@@ -269,8 +269,639 @@ $(document).ready(function(){
             cbw(code);
         }else if(code.search(/POP/i)>=0){
             pop(code);
+        }else if(code.search(/JL/i)>=0){
+            partA = code.split(",");
+            jl(partA[0],partA[1]);
+        }else if(code.search(/CMP/i)>=0){
+            diff_cmp(code);
+        }else if(code.search(/REPE/i)>=0){
+            repe(code);
+        }else if(code.search(/CLI/i)>=0){
+            cli(code);
+        }else if(code.search(/PUSHF/i)>=0){
+            pushf(code);
+        }else if(code.search(/JPE/i)>=0){
+            partA = code.split(",");
+            jpe(partA[0],partA[1]);
+        }else if(code.search(/LEA/i)>=0){
+            lea(code);
+        }else if(code.search(/DIV/i)>=0){
+            div(code);
+        }else if(code.search(/RET/i)>=0){
+            ret(code);
+        }else {
+            errorMsg("Sorry this Assembler Can't find this Instruction Set.");
         }
     });
+
+    function ret(code){
+        var DAS;
+        var x  = code;
+            if (isNaN(x)  && x == "RET" || x == "ret") {
+                var num = 195;
+                // var char = num.length(8);
+                var bin = num.toString(2);
+                var hex = num.toString(16);
+                binF.text('00 '+bin);
+                hexF.text(hex);
+            
+            }else{
+                errorMsg("INVALID!!  Please Enter a valid RET instruction set");
+            }
+    }
+
+    function div(code){
+        // this collects the instruction
+        function assemble() {
+            var instr = code;
+            return instr;   
+        }
+
+        // all my error functions will go here
+        function error(){
+            var checkInstr = assemble();
+            if (checkInstr == ""){
+                errorMsg("Please type an instruction");
+            }else{
+                var mnemonic = checkInstr.substring(0,3);
+                var checkDiv = mnemonic.toUpperCase();
+                    if ( checkDiv != "DIV"){
+                        errorMsg("Enter the right DIV command");
+                    }
+            }
+        }
+
+        // this function sets the mod
+        function setMod(){
+            error();
+            var checkInstr = assemble();
+            
+            var instrArray = checkInstr.split(" ");
+            var sqbr = instrArray[1].substring(0,1);
+            var sqbr2 = instrArray[2].substring(0,1);
+            var mnem = instrArray[0];
+            var op1 = instrArray[1].substring(0,2); // because of the comma.
+            var operand1= op1.toUpperCase();
+            var operand2 = instrArray[2].toUpperCase();
+            
+            if(sqbr == "["){ 
+                errorMsg("Operand 1 cannot begin with '[' ");
+            }else if(sqbr2 == "["){
+                var mod="00";
+                    if(operand1 == "AX"){
+                        var word ="1";
+                    }else if (operand1 == "AL"){
+                        var word ="0";
+                    }else{
+                        errorMsg("Operand 1 must be an accumulator register");
+                    }
+                var binStr = "1111011" + word + mod; 
+            }else {
+                var sixteen_bit = ["AX", "BX", "CX", "DX", "SP", "BP", "DI", "SI"];
+                var eight_bit = ["AL", "BL", "CL", "DL", "AH", "BH", "CH", "DH"];
+                
+                // checks to see if operands are registers  
+                function check(operand){
+                    var pos16 = sixteen_bit.indexOf(operand);	 
+                    var pos8 = eight_bit.indexOf(operand);	
+                        if (pos16 >= 0){
+                            var w = 1; 
+                        }
+                        else if(pos8 >= 0){
+                            var w =0;
+                        }
+                        else{
+                            errorMsg("Invalid DIV Operands");
+                        }
+                        return w;
+                    }
+                
+                        //stops the program if operand is not an accumulator register
+                        try{
+                        if(operand1 != "AX" &&  operand1 != "AL" ){
+                            throw "Err1";
+                            }
+                        }catch(er){
+                            if(er=="Err1"){
+                                errorMsg("Operand 1 must be an accumulator register");
+                                }
+                        }
+
+                    // sets w=1 if registers are 16bit & W=0 if registers are 8bit 
+                    var checkOperand1 = check(operand1);
+                    var checkOperand2 = check(operand2);
+
+                        if(checkOperand1 == 1 && checkOperand2 == 1){
+                            var word = "1";
+                            var mod = "11";  
+                        }else if(checkOperand1 == 0 && checkOperand2 == 0){
+                            var word = "0";
+                            var mod = "11";  
+                        }else{
+                            errorMsg("Error: To solve this error, check your registers");
+                        }//end else
+                var binStr = "1111011" + word + mod;
+            } //end else
+
+            var setModReturn = [operand2, binStr, sqbr2];
+            return setModReturn;
+        }
+        // end of setMod function.
+
+        function reg(){
+            var checkInstr = assemble();
+            var setModReturn = setMod();
+            operand2 = setModReturn[0];
+
+            if(operand2 =="CX" || operand2 =="CL"){
+                var rm = "001";
+            }else if(operand2 =="DX" || operand2 =="DL"){
+                var rm="010";
+            }else if(operand2 =="BX" || operand2 =="BL"){
+                var rm="011";
+            }else if(operand2 =="SP" || operand2 =="AH"){
+                var rm="100";
+            }else if(operand2 =="BP" || operand2 =="CH"){
+                var rm="101";
+            }else if(operand2 =="SI" || operand2 =="DH"){
+                var rm="110";
+            }else if(operand2 =="DI" || operand2 =="BH"){
+                var rm="111";
+            }else{
+                errorMsg("Invalid Combination, Operand 1 must be accumulator register");
+            }
+
+            var binStr = setModReturn[1];
+            var binStr = binStr +"110"+ rm ;
+            return binStr;
+        }
+        // calculates r/m when both operands are registers
+
+        function rSlashM(){
+            var checkInstr = assemble();
+            var setModReturn = setMod();
+            operand2 = setModReturn[0];
+            
+                if(operand2 == "[BX+SI]"){
+                var rm = "000";
+                }else if(operand2 == "[BX+DI]"){
+                    var rm =  "001";
+                }else if(operand2 == "[BP+SI]"){
+                    var rm =  "010";
+                }else if(operand2 == "[BP+DI]"){
+                    var rm =  "011";
+                }else if(operand2 == "[SI]"){
+                    var rm =  "100";
+                }else if(operand2 == "[DI]"){
+                    var rm =  "101";
+                }else if(operand2 == "[BP]"){
+                    var rm =  "110";
+                }else if(operand2 == "[BX]"){
+                    var rm =  "111";
+                }else{
+                    errorMsg("Invalid Combination");
+                }
+            
+            var binStr = setModReturn[1];
+            var binStr = binStr +"110"+ rm;
+            return binStr;
+        }// calculates r/m for when operand 2 is a memory location.
+            
+        var checkInstr = assemble();
+        var setModReturn = setMod();
+        sqbr2 = setModReturn[2];
+
+            if(sqbr2 == "[")
+            {var binary = rSlashM();
+            }else{
+            var binary = reg();
+            }
+
+
+        hexValue = parseInt(binary, 2).toString(16);
+
+        hexF.text(hexValue);
+        binF.text(binary);
+
+    }
+
+    function lea(code){
+        var datainput = code.toUpperCase().trim();
+        var str = datainput.substr(0, 3).toString().toUpperCase();
+        var mem = datainput.substr(7, datainput.length).toString().toUpperCase().trim();
+
+        if (str == "LEA") {
+            if (mem == "M" ) {
+                var x = datainput.substr(4, 2);
+                var y = x.toString().toUpperCase();
+                switch (y) {
+                    case 'AX':
+                        ax = "10001101 00000000";
+                        bp = "8D 00";
+                        break;
+
+                    case 'BX':
+                        ax = "10001101 00011000";
+                        bp = "8D 18";
+                        break;
+
+                    case 'CX':
+                        ax = "10001101 00001000";
+                        bp = "8D 08";
+                        break;
+
+                    case 'DX':
+                        ax = "10001101 00010000";
+                        bp = "8D 10";
+                        break;
+
+                    case 'BP':
+                        ax = "10001101 00101000";
+                        bp = "8D 28";
+                        break;
+
+                    case 'DI':
+                        ax = "10001101 00111000";
+                        bp = "8D 38";
+                        break;
+
+                    case 'SI':
+                        ax = "10001101 00110000";
+                        bp = "8D 30";
+                        break;
+
+                    case 'SP':
+                        ax = "10001101 00100000";
+                        bp = "8D 20";
+                        break;
+
+                    default:
+                        errorMsg("invalid LEA command");
+                }
+                binF.text(ax);
+                hexF.text(bp);
+            }
+            else {
+                errorMsg("Error, No memory detected");
+            }
+        }else {
+            alert("Wrong Instruction inputed");
+
+        }
+
+    }
+
+    function jpe(before, after){
+        var inputOne = before;
+        var z = inputOne.search(/JPE/i);
+        var otherPart = inputOne.substr(4,3);
+        var otherPartInt = parseInt(otherPart);
+
+        var secondInput = after;
+        secondInputInt = parseInt(secondInput);
+
+        var subtract = (secondInputInt) - (otherPartInt );
+        var divide =  subtract / 2 ;
+        var eben = 255 -  (divide);
+        var bindec = 122;
+        var binbin = bindec.toString(2);
+        var binhex = bindec.toString(16);
+
+        var boy = eben.toString(16);
+        var girl =eben.toString(2);
+           if((z >= 0) && (otherPartInt >= 0)){
+               binF.text(girl + "" + "" + "/" + binbin);
+               hexF.text(boy + " " + " " + "" + binhex);
+           }else{
+              errorMsg('Invalid JPE input format');
+           }
+    }
+
+    function pushf(code){
+        var dec,y,bin,hex;
+        dec =156;
+
+        var  x =  code.toUpperCase().trim();
+        var m = x.search(/PUSHF/i);
+        bin = dec.toString(2);
+        hex = dec.toString(16);
+            if (x== "PUSHF"){
+                binF.text(bin);
+                hexF.text(hex);
+            }else{
+                errorMsg("Invalid Input! Input PUSHF");
+            }
+    }
+
+    function cli(code){
+        var Input = code.trim()   //getting the value of the input and stripping the whitespace
+        var binary = 11111010;                                      //binary value of the CLI command
+        var hex = parseInt(binary,2).toString(16).toUpperCase();    //Converting the binary to decimal, and then to hex
+        
+            if(Input=="CLI"|Input=="cli"){
+                binF.text(binary);
+                hexF.text(hex);
+            }else{
+                errorMsg("The input command is CLI in upper or lower case.")    		//display error message to the user
+            }
+    }
+
+    function repe(code){
+        var x,bin,hex,dec;
+        x = code.trim().toUpperCase();
+        var y = x.substr(0,4).toString().toUpperCase();
+
+            if (y=="REPE"){
+                dec = 243;
+                bin = dec.toString(2);
+                hex = dec.toString(16).toUpperCase();
+                binF.text(bin);
+                hexF.text(hex);
+            }else{
+                errorMsg('invalid instruction set');
+            }
+    }
+
+    function cmp(code){
+        var parameters=code;
+        var tri=parameters.replace(","," ");
+        var tri1=tri.trim().toUpperCase();
+        if(parameters.length>3)
+        {
+            if(parameters.substring(0,4).toUpperCase()=="CMP ")
+            {
+                //immediate with accumulator
+                if (parameters.substring(4,6).toUpperCase()=="AX"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=61;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+conv+" 00");
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    binF.text(bin1+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="AL"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=60;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+conv+" 00");
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    binF.text(bin1+" "+nuh);
+                }
+                //end of immediate with accumulator
+                //IMMEDIATE WITH REISTER
+                else if (parameters.substring(4,6).toUpperCase()=="CX")
+                {
+                    var conv=Number(parameters.substring(7));
+                    var dec=131;
+                    var dec2=249;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="DX"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=131;
+                    var dec2=250;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="BX"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=131;
+                    var dec2=251;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="SP"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=131;
+                    var dec2=252;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="BP"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=131;
+                    var dec2=253;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="SI"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=131;
+                    var dec2=254;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="DI"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=131;
+                    var dec2=255;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="AL"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=128;
+                    var dec2=248;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="CL"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=128;
+                    var dec2=249;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="DL"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=128;
+                    var dec2=250;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="BL"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=128;
+                    var dec2=251;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="AH"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=128;
+                    var dec2=252;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="CH"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=128;
+                    var dec2=253;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="DH"){
+                    var conv=Number(parameters.substring(7));
+                    var dec=128;
+                    var dec2=254;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }else if (parameters.substring(4,6).toUpperCase()=="BH") {
+                    var conv=Number(parameters.substring(7));
+                    var dec=128;
+                    var dec2=255;
+                    var hex1=(+dec).toString(16).toUpperCase();
+                    var hex2=(+dec2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+conv);
+                    var nuh=(+conv).toString(2);
+                    var bin1=(+dec).toString(2);
+                    var bin2=(+dec2).toString(2);
+                    binF.text(bin1+" "+bin2+" "+nuh);
+                }
+                //IMMEDIATE WITH REGISTER
+                //IMMEDIATE WITH MEMORY		
+                else if ((parameters.substring(4,5)=="[")&&(parameters.substring(7,8)=="]")){
+                    var ang=parameters.substring(5,7).toUpperCase();
+                    var num1=128;
+                    var num2=62;
+                    var conv=Number(parameters.substring(9));
+                    var hex1=(+num1).toString(16).toUpperCase();
+                    var hex2=(+num2).toString(16).toUpperCase();
+                    hexF.text(hex1+" "+hex2+" "+ang+" 00 "+conv);
+                    var bin1=(+num1).toString(2).toUpperCase();
+                    var bin2=(+num2).toString(2).toUpperCase();
+                    var bin3=(+ang).toString(2).toUpperCase();
+                    var bin4=(+conv).toString(2).toUpperCase();
+                    binF.text(bin1+" "+bin2+" "+bin3+" 00 "+bin4);
+                }                
+            }else{
+                errorMsg("This assembler works only for CMP and make sure you put a space after CMP");
+            }
+        }else{
+            errorMsg("Wrong! Enter a valid instruction");
+        }
+    }
+
+    function diff_cmp(code){
+        code = code.toUpperCase();
+        if (code.search(/CMPSW/i)>=0){
+            cmpsw(code);
+        }else if(code.substring(0,4)==="CMP "){
+            cmp(code);
+        }
+    }
+
+    function cmpsw(code){
+        dec = 166;   
+        decOne = 167; 
+        bin = dec.toString(2);
+        hex = dec.toString(16);
+        hexOne = decOne.toString(16);
+        x = code.trim();
+        y = x.toUpperCase();
+       m = y.charAt(4).toString().toUpperCase();
+  
+       if(y== "CMPSW" ){
+           switch(m)
+           {
+               case 'W':
+                   binF.text(bin + " "  + bin + "1");
+                   hexF.text(hex + " "  + hexOne);
+                   break;
+               default:
+                   errorMsg('invalid input');
+                   break;
+           }
+       }else{
+           errorMsg("ENTER A CORRECT INSTRUCTION SET");
+       }
+    }
+
+    function jl(before, after){
+        var input1 = before;
+        var firstPart = input1.substr(0,3);
+        var z = input1.search(/JL/i);
+        var otherPart = input1.substr(4,3);
+        var otherPartInt = parseInt(otherPart);
+
+        var secondInput = after;
+        secondInputInt = parseInt(secondInput);
+
+        var subtract = (secondInputInt) - (otherPartInt );
+        var divide =  subtract / 2 ;
+        var line = 255 -  (divide);
+        var bindec = 124;
+        var binbin = bindec.toString(2);
+        var binhex = bindec.toString(16);
+
+        var str = line.toString(16);
+        var stu =line.toString(2);
+           if((z >= 0) && (otherPartInt >= 0)){
+               binF.text(stu + "" + "" + "/" + binbin);
+               hexF.text(str+ " " + " " + "" + binhex);
+           }else{
+              errorMsg('invalid input');
+           }
+    }
 
     function pop(code){
         var datainput = code.trim();
@@ -355,7 +986,6 @@ $(document).ready(function(){
 
         var regb = {"AX":"0","AL":"0","CX":"1","CL":"1","DX":"2","DL":"2","BX":"3","BL":"3","SP":"4","AH":"4","BP":"5","CH":"5","SI":"6","DH":"6","DI":"7","BH":"7"};
         var value = code.toUpperCase();
-        console.log(regb[value.substring(4)]);
         if (regb[value.substring(4)] && value.substring(0,4) == "JNA ") {
             var rega = regb[value.substring(4)];
             binF.text("01110110 " + pad((+rega).toString(2), 0, 8));
@@ -2383,7 +3013,6 @@ $(document).ready(function(){
         var datainput = code.trim();
         var str = datainput.substr(0, 3).toString().toUpperCase();
         var mem = datainput.substr(7, datainput.length).toString().toUpperCase();
-        console.log(mem);
         if (str == "LDS"||str == "lds") {
             if (mem != "" ) {
                 var x = datainput.substr(4, 2);
@@ -2469,7 +3098,6 @@ $(document).ready(function(){
     
         function generate(instr, instrlength) {
             instr = instr.trim();
-            console.log(instr.length)
             switch (instr.length) {
                 case 3: wordreg(instr); break;
                 case 9: menmonics(instr); break;
@@ -2572,7 +3200,6 @@ $(document).ready(function(){
     
         function compare(x) {
             var y = x.substring(0, 3).toString().toUpperCase();
-            console.log(y);
             switch (y) {
                 case "DEC":
                     generate(x.substring(3, x.length), x.length);
