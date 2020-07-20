@@ -80,7 +80,28 @@ if (canvas && canvas.getContext) {
     context.stroke();
     context.restore();
 
+    //Rim of cup 2
+    context.save(); 
+    context.translate(translateWidth, translateHeight); 
+    context.scale(2,0.3); 
+    context.beginPath();
+    context.arc(262.5, 1030, 11.8, 0, Math.PI*2, false);
+    context.stroke(); 
+    context.restore();
+
+    //Body of cup 2
+    context.save();
+    context.translate(translateWidth, translateHeight);
+    context.beginPath();
+    context.moveTo(500, 310);
+    context.bezierCurveTo(450,430, 600,430, 550,310); //bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
+    context.stroke();
+    context.restore();
+
+
     
+
     
+
 
 }
