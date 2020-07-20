@@ -17,7 +17,7 @@ if (canvas && canvas.getContext) {
     context.translate(translateWidth, translateHeight); //This ses where the oval should show on the page
     context.scale(2,0.3); //Sets the shape  by adjusting the x and y axis
     context.beginPath();
-    context.arc(canvasX, canvasY, radius, 0, Math.PI*2, false);
+    context.arc(canvasX, canvasY, radius, 0, Math.PI*2, false); //arc(x, y, radius, startAngle, endAngle, anticlockwise)
     context.restore();// Restores saved canvas state
     // context.fillStyle = '#cccccc'; //Color of oval
     // context.fill();
@@ -62,6 +62,25 @@ if (canvas && canvas.getContext) {
     context.restore();
 
 // Cups
+    //Rim of cup 1
+    context.save(); 
+    context.translate(translateWidth, translateHeight); 
+    context.scale(2,0.3); 
+    context.beginPath();
+    context.arc(212.5, 1030, 11.8, 0, Math.PI*2, false);
+    context.stroke(); 
+    context.restore();
 
+    //Body of cup 1
+    context.save();
+    context.translate(translateWidth, translateHeight);
+    context.beginPath();
+    context.moveTo(400, 310);
+    context.bezierCurveTo(350,430, 500,430, 450,310); //bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
+    context.stroke();
+    context.restore();
+
+    
+    
 
 }
