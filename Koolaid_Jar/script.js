@@ -21,6 +21,10 @@ if (canvas && canvas.getContext) {
     context.restore();// Restores saved canvas state
     // context.fillStyle = '#cccccc'; //Color of oval
     // context.fill();
+
+    // context.fillStyle = '#8ED6FF';
+    // context.fill();
+
     context.lineWidth = 4; // Oval border width
     context.strokeStyle = 'grey'; // Oval border colors
     context.stroke();
@@ -31,6 +35,10 @@ if (canvas && canvas.getContext) {
     context.beginPath();
     context.moveTo(-80, 0);
     context.bezierCurveTo(-40,40,-20,50,-60,150);
+
+    // context.fillStyle = '#8ED6FF';
+    // context.fill();
+
     context.stroke();
     context.restore();
 
@@ -40,6 +48,10 @@ if (canvas && canvas.getContext) {
     context.beginPath();
     context.moveTo(-60, 150);
     context.quadraticCurveTo(-135,400,0,400); //
+    
+    context.fillStyle = '#8ED6FF';
+    context.fill();
+    
     context.stroke();
     context.restore();
 
@@ -49,8 +61,17 @@ if (canvas && canvas.getContext) {
     context.beginPath();
     context.moveTo(0, 400);
     context.bezierCurveTo(320,420,-20,100,80,0);
+
+    context.fillStyle = '#8ED6FF';
+    context.fill();
+    
     context.stroke();
     context.restore();
+
+    // Color
+    // context.closePath();
+    // context.fillStyle = '#8ED6FF';
+    // context.fill();
 
     //Using a Beizer Curve for the Handle of the Jug
     context.save();
