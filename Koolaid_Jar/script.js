@@ -71,6 +71,8 @@ if (canvas && canvas.getContext) {
     context.beginPath();
     context.moveTo(400, 310);
     context.bezierCurveTo(350,430, 500,430, 450,310); //bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
+    context.fillStyle = '#cccccc';
+    context.fill();
     context.stroke();
     context.restore();
 
