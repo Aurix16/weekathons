@@ -5,6 +5,12 @@ canvas = document.getElementById('canvas');
 if (canvas && canvas.getContext) {
     context = canvas.getContext('2d');
 
+let gradient = context.createLinearGradient(0,50,0,350);
+gradient.addColorStop(0, 'Transparent');
+gradient.addColorStop(0.5, 'Transparent');
+gradient.addColorStop(0.7, 'Transparent');
+gradient.addColorStop(1,'MediumPurple');
+
 //Jug Code
     // Draws the top of the jug.
     let translateWidth = canvas.width/6;
@@ -18,6 +24,10 @@ if (canvas && canvas.getContext) {
     context.scale(2,0.3); //Sets the shape  by adjusting the x and y axis
     context.beginPath();
     context.arc(canvasX, canvasY, radius, 0, Math.PI*2, false); //arc(x, y, radius, startAngle, endAngle, anticlockwise)
+    
+    context.fillStyle = 'transparent';
+    context.fill();
+    
     context.restore();// Restores saved canvas state
 
     context.lineWidth = 4; // Oval border width
@@ -43,7 +53,7 @@ if (canvas && canvas.getContext) {
     context.restore();
 
     // Color;
-    context.fillStyle = '#cccccc';
+    context.fillStyle = gradient;
     context.fill();
 
     //Using a Beizer Curve for the Handle of the Jug
