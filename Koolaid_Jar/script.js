@@ -32,19 +32,19 @@ if (canvas && canvas.getContext) {
     context.bezierCurveTo(-30,40,-30,50,-60,150);
 
     //Using a Quadratic Curve for the Body of the Jug (Second Curve)
-    context.moveTo(-60, 150);
+    // context.moveTo(-60, 150);
     context.quadraticCurveTo(-135,400,0,400); //
     
     //Using a Beizer Curve for the Body of the Jug (Third Curve)
-    context.moveTo(0, 400);
+    // context.moveTo(0, 400);
     context.bezierCurveTo(320,420,-20,100,80,0);
    
     context.stroke();
     context.restore();
 
     // Color;
-    // context.fillStyle = '#cccccc';
-    // context.fill();
+    context.fillStyle = '#cccccc';
+    context.fill();
 
     //Using a Beizer Curve for the Handle of the Jug
     context.save();
