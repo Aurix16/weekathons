@@ -8,8 +8,24 @@
     <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
 </head>
 <body>
+    <div>
+        <h1 class="title">Koolaid Jar</h1>
+        <div>
+            <h2>
+                <label for="favcolor">Koolaid? Pick a color.</label>
+            </h2>
+            <ul id="favcolor">
+                <li onclick="getValue()" class="colorList" value="red">Red</li>
+                <li class="colorList" value="green">Green</li>
+                <li class="colorList" value="blue">Blue</li>
+                <li class="colorList" value="red">Custom</li>
+            </ul>
+            <input type="color" name="favcolor" value="#ff0000" style="height:40px; width: 100px;">
+        </div>
+    </div>
     
- <canvas id="canvas" width="1500px" height="800px" style="background-color:rgb(219, 219, 219)"></canvas>
+
+    <canvas id="canvas" width="1500px" height="800px" style="background-color:rgb(219, 219, 219)"></canvas>
     
 <!--Scripts-->
     <script src="script.js"></script>
