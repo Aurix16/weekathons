@@ -6,7 +6,10 @@ loadCanvas()
 function loadCanvas(gradColor = "Transparent"){
     if (canvas && canvas.getContext) {
         context = canvas.getContext('2d');
-    
+        
+        //Clear canvas then redraw
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
         let gradient = context.createLinearGradient(0,260,0,270);
         gradient.addColorStop(0.7, 'Transparent');
         gradient.addColorStop(1,gradColor);
@@ -81,8 +84,8 @@ function loadCanvas(gradColor = "Transparent"){
         context.beginPath();
         context.moveTo(400, 310);
         context.bezierCurveTo(350,430, 500,430, 450,310); //bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
-        context.fillStyle = '#cccccc';
-        context.fill();
+        // context.fillStyle = '#cccccc';
+        // context.fill();
         context.stroke();
         context.restore();
     
@@ -186,12 +189,29 @@ function loadCanvas(gradColor = "Transparent"){
 }
 
 
-
-//
+//Changing Color of the Koolaid in Jar.
 let listItems = document.querySelectorAll("ul li");
 listItems.forEach(function(item) {
     item.onclick = function(e) {
-       gradColor = (this.innerText); // this returns clicked li's value
-       loadCanvas(gradColor);
+        if (this.innerText == "Custom"){
+            let theInputTag = document.getElementById("favColor");
+
+            //Make custom list item disappear and color picker appear
+            theInputTag.style.display = 'block';
+
+            //Pass selected color to the Koolaid Jar
+            theInputTag.addEventListener("input", function() {
+                let theColorValue = theInputTag.value;
+                loadCanvas(theColorValue);
+                }, true);
+        }else{
+            //Ensure custom list item shows
+            document.getElementById("favColor").style.display = 'none';
+
+            //Pass the color to the koolaid jar
+            loadCanvas(this.innerText);
+        }
+
+       
     }
   });
