@@ -26,11 +26,7 @@ function loadCanvas(gradColor = "Transparent"){
         context.translate(translateWidth, translateHeight); //This ses where the oval should show on the page
         context.scale(2,0.3); //Sets the shape  by adjusting the x and y axis
         context.beginPath();
-        context.arc(canvasX, canvasY, radius, 0, Math.PI*2, false); //arc(x, y, radius, startAngle, endAngle, anticlockwise)
-        
-        // context.fillStyle = 'Transparent';
-        // context.fill();
-        
+        context.arc(canvasX, canvasY, radius, 0, Math.PI*2, false); //arc(x, y, radius, startAngle, endAngle, anticlockwise)        
         context.restore();// Restores saved canvas state
     
         context.lineWidth = 3; // Oval border width
