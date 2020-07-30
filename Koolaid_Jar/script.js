@@ -175,10 +175,22 @@ function loadCanvas(gradColor = "Transparent"){
         context.stroke();
         context.restore();
     
-    
+    // Surface Line
+        //Drawing the line
+        context.save();
+        context.save();
+        context.translate(translateWidth, translateHeight);
+        context.beginPath();
+        context.moveTo(-200, 402);
+        context.lineTo(1040, 402);
         
-    
-        
+        //Blur to give it that surface feel
+        context.shadowBlur = 15;
+        context.shadowOffsetX = 5;
+        context.shadowOffsetY = 7;
+        context.shadowColor = "black";
+        context.stroke();
+        context.restore()
     
     
     }
