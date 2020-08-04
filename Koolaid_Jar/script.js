@@ -21,18 +21,20 @@ function loadCanvas(gradColor = "Transparent"){
         let canvasX = 0;
         let canvasY = 0;
         let radius = 40;
-    
+        context.lineWidth = 3; // Oval border width
+        context.strokeStyle = 'black'; // Oval border colors
+
         context.save(); // Saves current canvas state
         context.translate(translateWidth, translateHeight); //This ses where the oval should show on the page
         context.scale(2,0.3); //Sets the shape  by adjusting the x and y axis
         context.beginPath();
         context.arc(canvasX, canvasY, radius, 0, Math.PI*2, false); //arc(x, y, radius, startAngle, endAngle, anticlockwise)        
         context.restore();// Restores saved canvas state
-    
-        context.lineWidth = 3; // Oval border width
-        context.strokeStyle = 'black'; // Oval border colors
         context.stroke();
-    
+        //context.closePath();
+        //paths.push({"jugTop": Path});
+        console.log(context);
+
         //Using a Beizer Curve for the Body of the Jug (First Curve)
         context.save();
         context.translate(translateWidth, translateHeight);
@@ -178,7 +180,6 @@ function loadCanvas(gradColor = "Transparent"){
     // Surface Line
         //Drawing the line
         context.save();
-        context.save();
         context.translate(translateWidth, translateHeight);
         context.beginPath();
         context.moveTo(-200, 402);
@@ -223,3 +224,64 @@ listItems.forEach(function(item) {
        
     }
   });
+
+//Getting the X and Y position of Mouse.
+//document.addEventListener("click", getColor);
+
+function printMousePos (event){
+    let xCord = event.clientX;     // Get the horizontal coordinate
+    let yCord = event.clientY;     // Get the vertical coordinate
+    // console.log("X coords: " + xCord + ", Y coords: " + yCord + "context:" + context); 
+     console.log(context.isPointInPath(xCord, yCord));
+    //console.log(context);
+    console.log(xCord, yCord);
+    return xCord, yCord;
+}
+ 
+function getColor(event){
+    let x, y = printMousePos(event);
+
+    let pixelData = context.getImageData (x, y, 1, 1).data;
+    // console.log(elem.style.backgroundColor);
+    console.log(pixelData);
+}
+
+function getElementPosition(obj) {
+    var curleft = 0, curtop = 0;
+    if (obj.offsetParent) {
+        do {
+            curleft += obj.offsetLeft;
+            curtop += obj.offsetTop;
+        } while (obj = obj.offsetParent);
+        return { x: curleft, y: curtop };
+    }
+    return undefined;
+}
+
+function getEventLocation(element,event){
+    // Relies on the getElementPosition function.
+    var pos = getElementPosition(element);
+    
+    return {
+    	x: (event.pageX - pos.x),
+      	y: (event.pageY - pos.y)
+    };
+}
+
+canvas.addEventListener("click",function(event){
+    // Get the coordinates of the click
+    var eventLocation = getEventLocation(this,event);
+    // Get the data of the pixel according to the location generate by the getEventLocation function
+    var context = this.getContext('2d');
+    var pixelData = context.getImageData(eventLocation.x, eventLocation.y, 1, 1).data; 
+    console.log(pixelData);
+
+    // If transparency on the pixel , array = [0,0,0,0]
+    if((pixelData[0] == 0) && (pixelData[1] == 0) && (pixelData[2] == 0) && (pixelData[3] == 0)){
+        // Do something if the pixel is transparent
+    }
+
+    // Convert it to HEX if you want using the rgbToHex method.
+    // var hex = "#" + ("000000" + rgbToHex(pixelData[0], pixelData[1], pixelData[2])).slice(-6);
+},false);
+
