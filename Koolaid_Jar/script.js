@@ -225,55 +225,40 @@ listItems.forEach(function(item) {
     }
   });
 
-//Getting the X and Y position of Mouse.
-//document.addEventListener("click", getColor);
 
-function printMousePos (event){
-    let xCord = event.clientX;     // Get the horizontal coordinate
-    let yCord = event.clientY;     // Get the vertical coordinate
-    // console.log("X coords: " + xCord + ", Y coords: " + yCord + "context:" + context); 
-     console.log(context.isPointInPath(xCord, yCord));
-    //console.log(context);
-    console.log(xCord, yCord);
-    return xCord, yCord;
-}
- 
-function getColor(event){
-    let x, y = printMousePos(event);
-
-    let pixelData = context.getImageData (x, y, 1, 1).data;
-    // console.log(elem.style.backgroundColor);
-    console.log(pixelData);
-}
-
+//Get position of what I'm clicking on in this case canvas.
 function getElementPosition(obj) {
-    var curleft = 0, curtop = 0;
+    let curleft = 0, curtop = 0;
     if (obj.offsetParent) {
         do {
-            curleft += obj.offsetLeft;
-            curtop += obj.offsetTop;
+            curleft += obj.offsetLeft;  //position from the left i.e where canvas starts
+            curtop += obj.offsetTop;    //position from the top i.e where canvas starts
         } while (obj = obj.offsetParent);
+
         return { x: curleft, y: curtop };
     }
     return undefined;
 }
 
+//Get specific position of where I'm clicking
 function getEventLocation(element,event){
     // Relies on the getElementPosition function.
-    var pos = getElementPosition(element);
+    let pos = getElementPosition(element);
     
     return {
-    	x: (event.pageX - pos.x),
-      	y: (event.pageY - pos.y)
+    	x: (event.pageX - pos.x), //Gets specific position of x
+      	y: (event.pageY - pos.y)  //Gets specific position of y
     };
 }
 
+//Add function when the canvas is clicked
 canvas.addEventListener("click",function(event){
-    // Get the coordinates of the click
-    var eventLocation = getEventLocation(this,event);
+    // Get the coordinates of the click specific to the Canvas point.
+    let eventLocation = getEventLocation(this,event);
+    
     // Get the data of the pixel according to the location generate by the getEventLocation function
-    var context = this.getContext('2d');
-    var pixelData = context.getImageData(eventLocation.x, eventLocation.y, 1, 1).data; 
+    let context = this.getContext('2d');
+    let pixelData = context.getImageData(eventLocation.x, eventLocation.y, 1, 1).data; 
     console.log(pixelData);
 
     // If transparency on the pixel , array = [0,0,0,0]
@@ -281,7 +266,6 @@ canvas.addEventListener("click",function(event){
         // Do something if the pixel is transparent
     }
 
-    // Convert it to HEX if you want using the rgbToHex method.
-    // var hex = "#" + ("000000" + rgbToHex(pixelData[0], pixelData[1], pixelData[2])).slice(-6);
 },false);
+
 
