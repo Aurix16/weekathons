@@ -3,7 +3,7 @@ canvas = document.getElementById('canvas');
 loadCanvas()
 
 //Code for the HTML Canvas.
-function loadCanvas(gradColor = "Transparent"){
+function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
     if (canvas && canvas.getContext) {
         context = canvas.getContext('2d');
         
@@ -11,7 +11,7 @@ function loadCanvas(gradColor = "Transparent"){
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         let gradient = context.createLinearGradient(0,260,0,270);
-        gradient.addColorStop(0.7, 'Transparent');
+        gradient.addColorStop(0.7, 'rgba(255,255,255,0.01)');
         gradient.addColorStop(1,gradColor);
     
     //Jug Code
@@ -31,9 +31,10 @@ function loadCanvas(gradColor = "Transparent"){
         context.arc(canvasX, canvasY, radius, 0, Math.PI*2, false); //arc(x, y, radius, startAngle, endAngle, anticlockwise)        
         context.restore();// Restores saved canvas state
         context.stroke();
-        //context.closePath();
-        //paths.push({"jugTop": Path});
-        console.log(context);
+
+        // Color
+        context.fillStyle = "rgba(255,255,255,0.01)";
+        context.fill();
 
         //Using a Beizer Curve for the Body of the Jug (First Curve)
         context.save();
@@ -53,7 +54,7 @@ function loadCanvas(gradColor = "Transparent"){
         context.stroke();
         context.restore();
     
-        // Color;
+        // Color
         context.fillStyle = gradient;
         context.fill();
     
@@ -65,6 +66,10 @@ function loadCanvas(gradColor = "Transparent"){
         context.bezierCurveTo(250,50,70,210,130,250);
         context.stroke();
         context.restore();
+        
+        // Color
+        context.fillStyle = "rgba(255,255,255,0.01)";
+        context.fill();
     
     // Cups
         //Rim of cup 1
@@ -262,8 +267,11 @@ canvas.addEventListener("click",function(event){
     console.log(pixelData);
 
     // If transparency on the pixel , array = [0,0,0,0]
-    if((pixelData[0] == 0) && (pixelData[1] == 0) && (pixelData[2] == 0) && (pixelData[3] == 0)){
+    if((pixelData[0] == 0) && (pixelData[1] == 0) && (pixelData[2] == 0)){
         // Do something if the pixel is transparent
+        console.log("jug is empty.");
+    }else{
+        console.log("bottoms up");
     }
 
 },false);
