@@ -269,9 +269,9 @@ canvas.addEventListener("click",function(event){
     // If transparency on the pixel , array = [0,0,0,0]
     if((pixelData[0] == 0) && (pixelData[1] == 0) && (pixelData[2] == 0)){
         // Do something if the pixel is transparent
-        console.log("jug is empty.");
+        console.log("Outside Jug body and handle");
     }else{
-        console.log("bottoms up");
+        console.log("Inside Jug");
     }
 
 },false);
