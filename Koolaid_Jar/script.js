@@ -1,6 +1,22 @@
 let canvas, context;
 canvas = document.getElementById('canvas');
-loadCanvas()
+loadAll();
+
+//Function to load Canvas and all Items on Canvas.
+function loadAll(color){
+    loadCanvas(color);
+    loadCanvas.drawJug();
+    loadCanvas.drawCups();
+    loadCanvas.drawSurface();
+}
+
+function loadAllInverted(color){
+    loadCanvas(color);
+    loadCanvas.drawJugInverted();
+    loadCanvas.drawCups();
+    loadCanvas.drawSurface();
+}
+
 
 //Code for the HTML Canvas.
 function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
@@ -13,9 +29,7 @@ function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
         let gradient = context.createLinearGradient(0,260,0,270);
         gradient.addColorStop(0.7, 'rgba(255,255,255,0.01)');
         gradient.addColorStop(1,gradColor);
-    
-    //Jug Code
-        // Draws the top of the jug.
+
         let translateWidth = canvas.width/6;
         let translateHeight = canvas.height/6;
         let canvasX = 0;
@@ -23,7 +37,60 @@ function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
         let radius = 40;
         context.lineWidth = 3; // Oval border width
         context.strokeStyle = 'black'; // Oval border colors
-
+    
+    //Jug Code
+    function drawJug() {
+         // Draws the top of the jug. 
+         context.save(); // Saves current canvas state
+         context.translate(translateWidth, translateHeight); //This ses where the oval should show on the page
+         context.scale(2,0.3); //Sets the shape  by adjusting the x and y axis
+         context.beginPath();
+         context.arc(canvasX, canvasY, radius, 0, Math.PI*2, false); //arc(x, y, radius, startAngle, endAngle, anticlockwise)        
+         context.restore();// Restores saved canvas state
+         context.stroke();
+ 
+         // Color
+         context.fillStyle = "rgba(255,255,255,0.01)";
+         context.fill();
+        
+         //Using a Beizer Curve for the Body of the Jug (First Curve)
+         context.save();
+         context.translate(translateWidth, translateHeight);
+         context.beginPath();
+         context.moveTo(-80, 0);
+         context.bezierCurveTo(-30,40,-30,50,-60,150);
+     
+         //Using a Quadratic Curve for the Body of the Jug (Second Curve)
+         // context.moveTo(-60, 150);
+         context.quadraticCurveTo(-135,400,0,400); //
+         
+         //Using a Beizer Curve for the Body of the Jug (Third Curve)
+         // context.moveTo(0, 400);
+         context.bezierCurveTo(320,420,-20,100,80,0);
+        
+         context.stroke();
+         context.restore();
+     
+         // Color
+         context.fillStyle = gradient;
+         context.fill();
+     
+         //Using a Beizer Curve for the Handle of the Jug
+         context.save();
+         context.translate(translateWidth, translateHeight);
+         context.beginPath();
+         context.moveTo(60, 50);
+         context.bezierCurveTo(250,50,70,210,130,250);
+         context.stroke();
+         context.restore();
+         
+         // Color
+         context.fillStyle = "rgba(255,255,255,0.01)";
+         context.fill();
+    }
+       
+    function drawJugInverted() {
+        // Draws the top of the jug. 
         context.save(); // Saves current canvas state
         context.translate(translateWidth, translateHeight); //This ses where the oval should show on the page
         context.scale(2,0.3); //Sets the shape  by adjusting the x and y axis
@@ -35,10 +102,11 @@ function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
         // Color
         context.fillStyle = "rgba(255,255,255,0.01)";
         context.fill();
-
+       
         //Using a Beizer Curve for the Body of the Jug (First Curve)
         context.save();
         context.translate(translateWidth, translateHeight);
+        context.scale(-1,1);
         context.beginPath();
         context.moveTo(-80, 0);
         context.bezierCurveTo(-30,40,-30,50,-60,150);
@@ -61,6 +129,7 @@ function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
         //Using a Beizer Curve for the Handle of the Jug
         context.save();
         context.translate(translateWidth, translateHeight);
+        context.scale(-1,1);
         context.beginPath();
         context.moveTo(60, 50);
         context.bezierCurveTo(250,50,70,210,130,250);
@@ -70,8 +139,11 @@ function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
         // Color
         context.fillStyle = "rgba(255,255,255,0.01)";
         context.fill();
+   }
     
     // Cups
+    function drawCups() {
+        // Cup 1
         //Rim of cup 1
         context.save(); 
         context.translate(translateWidth, translateHeight); 
@@ -92,6 +164,7 @@ function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
         context.stroke();
         context.restore();
     
+    // Cup 2
         //Rim of cup 2
         context.save(); 
         context.translate(translateWidth, translateHeight); 
@@ -110,6 +183,7 @@ function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
         context.stroke();
         context.restore();
     
+    // Cup 3
         //Rim of cup 3
         context.save(); 
         context.translate(translateWidth, translateHeight); 
@@ -128,6 +202,7 @@ function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
         context.stroke();
         context.restore();
     
+    // Cup 4    
         //Rim of cup 4
         context.save(); 
         context.translate(translateWidth, translateHeight); 
@@ -146,6 +221,7 @@ function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
         context.stroke();
         context.restore();
     
+    // Cup 5    
         //Rim of cup 5
         context.save(); 
         context.translate(translateWidth, translateHeight); 
@@ -164,6 +240,7 @@ function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
         context.stroke();
         context.restore();
     
+    // Cup 6    
         //Rim of cup 6
         context.save(); 
         context.translate(translateWidth, translateHeight); 
@@ -181,8 +258,11 @@ function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
         context.bezierCurveTo(850,430, 1000,430, 950,310); //bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
         context.stroke();
         context.restore();
+    }
+    
     
     // Surface Line
+    function drawSurface() {
         //Drawing the line
         context.save();
         context.translate(translateWidth, translateHeight);
@@ -197,9 +277,14 @@ function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
         context.shadowColor = "black";
         context.stroke();
         context.restore()
-    
-    
     }
+        
+    }
+
+    loadCanvas.drawJug = drawJug;
+    loadCanvas.drawJugInverted = drawJugInverted;
+    loadCanvas.drawCups = drawCups;
+    loadCanvas.drawSurface = drawSurface;
 }
 
 
@@ -216,14 +301,14 @@ listItems.forEach(function(item) {
             //Pass selected color to the Koolaid Jar
             theInputTag.addEventListener("input", function() {
                 let theColorValue = theInputTag.value;
-                loadCanvas(theColorValue);
+                loadAll(theColorValue)
                 }, true);
         }else{
             //Ensure custom list item shows
             document.getElementById("favColor").style.display = 'none';
 
             //Pass the color to the koolaid jar
-            loadCanvas(this.innerText);
+            loadAll(this.innerText);
         }
 
        
@@ -272,6 +357,9 @@ canvas.addEventListener("click",function(event){
         console.log("Outside Jug body and handle");
     }else{
         console.log("Inside Jug");
+        
+        loadAllInverted();
+        
     }
 
 },false);
