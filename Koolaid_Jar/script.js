@@ -341,8 +341,17 @@ function getEventLocation(element,event){
     };
 }
 
+function addEventListener(element, type, fn) {
+    if (element.addEventListener){
+        element.addEventListener(type, fn, false); 
+    } else if (el.attachEvent){
+        el.attachEvent('on' + type, fn);
+    }
+}
+
+
 //Add function when the canvas is clicked
-canvas.addEventListener("click",function(event){
+addEventListener(canvas,"click",function(event){
     // Get the coordinates of the click specific to the Canvas point.
     let eventLocation = getEventLocation(this,event);
     
@@ -357,11 +366,14 @@ canvas.addEventListener("click",function(event){
         console.log("Outside Jug body and handle");
     }else{
         console.log("Inside Jug");
+        addEventListener(canvas, "mousedown", function(event){
+            loadAllInverted();
+        }, false);
         
-        loadAllInverted();
         
     }
 
 },false);
+
 
 
