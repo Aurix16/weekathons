@@ -1,13 +1,17 @@
 let canvas, context;
 canvas = document.getElementById('canvas');
-loadAll();
+let flippedVar = false;
+
+toggleCanvas();
 
 //Function to load Canvas and all Items on Canvas.
-function loadAll(color){
-    loadCanvas(color);
-    loadCanvas.drawJug();
-    loadCanvas.drawCups();
-    loadCanvas.drawSurface();
+// Controls if element on canvas are inverted or not.
+function toggleCanvas(color){
+    if (flippedVar){
+        loadAllInverted(color);
+    }else{
+        loadAll(color);
+    }
 }
 
 function loadAllInverted(color){
@@ -17,6 +21,12 @@ function loadAllInverted(color){
     loadCanvas.drawSurface();
 }
 
+function loadAll(color){
+    loadCanvas(color);
+    loadCanvas.drawJug();
+    loadCanvas.drawCups();
+    loadCanvas.drawSurface();
+}
 
 //Code for the HTML Canvas.
 function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
@@ -301,14 +311,14 @@ listItems.forEach(function(item) {
             //Pass selected color to the Koolaid Jar
             theInputTag.addEventListener("input", function() {
                 let theColorValue = theInputTag.value;
-                loadAll(theColorValue)
+                toggleCanvas(theColorValue)
                 }, true);
         }else{
             //Ensure custom list item shows
             document.getElementById("favColor").style.display = 'none';
 
             //Pass the color to the koolaid jar
-            loadAll(this.innerText);
+            toggleCanvas(this.innerText);
         }
 
        
@@ -367,7 +377,8 @@ addEventListener(canvas,"click",function(event){
     }else{
         console.log("Inside Jug");
         addEventListener(canvas, "mousedown", function(event){
-            loadAllInverted();
+            flippedVar = true;
+            toggleCanvas();
         }, false);
         
         
