@@ -375,25 +375,50 @@ addEventListener(canvas,"click",function(event){
     console.log(pixelData);
 
     // If transparency on the pixel , array = [0,0,0,0]
-    if((pixelData[0] == 0) && (pixelData[1] == 0) && (pixelData[2] == 0)){
+    if((pixelData[0] == 0) && (pixelData[1] == 0) && (pixelData[2] == 0) && (pixelData[3] == 0)){
         // Do something if the pixel is transparent
         console.log("Outside Jug body and handle");
+        insideJug = false;
+        
+        //Toggle position on click if outside jug
+        flippedVar = false;
+        toggleCanvas(hue);
     }else{
         console.log("Inside Jug");
+        insideJug = true;
         //Toggle position on click if inside jug
-            if (flippedVar == true){
-                flippedVar = false;
-                toggleCanvas(hue);
-            }else{
-                flippedVar = true;
-                toggleCanvas(hue);
-            }
+        flippedVar = true;
+        toggleCanvas(hue);
             
-        
+        onDrag();
         
     }
 
 },false);
+
+//Function to check if user drags.
+function onDrag(){
+    if (insideJug==true){
+                let moved
+        let downListener = () => {
+            moved = false
+        }
+        addEventListener(canvas, 'mousedown', downListener)
+        let moveListener = () => {
+            moved = true
+        }
+        addEventListener(canvas, 'mousemove', moveListener)
+        let upListener = () => {
+            if (moved) {
+                console.log('moved')
+            } else {
+                console.log('not moved')
+            }
+        }
+        addEventListener(canvas,'mouseup', upListener)
+    }
+}
+
 
 
 
