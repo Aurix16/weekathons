@@ -1,32 +1,12 @@
+//Variables
 let canvas, context;
 canvas = document.getElementById('canvas');
-let flippedVar = false;
+let flippedVar = false; //variable to control flipping
+let hue; //global variable to maintain color
+let insideJug = false; //This is set when click happens in jug;
 
+//Loads canvas.
 toggleCanvas();
-
-//Function to load Canvas and all Items on Canvas.
-// Controls if element on canvas are inverted or not.
-function toggleCanvas(color){
-    if (flippedVar){
-        loadAllInverted(color);
-    }else{
-        loadAll(color);
-    }
-}
-
-function loadAllInverted(color){
-    loadCanvas(color);
-    loadCanvas.drawJugInverted();
-    loadCanvas.drawCups();
-    loadCanvas.drawSurface();
-}
-
-function loadAll(color){
-    loadCanvas(color);
-    loadCanvas.drawJug();
-    loadCanvas.drawCups();
-    loadCanvas.drawSurface();
-}
 
 //Code for the HTML Canvas.
 function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
@@ -297,7 +277,6 @@ function loadCanvas(gradColor = "rgba(255,255,255,0.01)"){
     loadCanvas.drawSurface = drawSurface;
 }
 
-
 //Changing Color of the Koolaid in Jar.
 let listItems = document.querySelectorAll("ul li");
 listItems.forEach(function(item) {
@@ -310,21 +289,22 @@ listItems.forEach(function(item) {
 
             //Pass selected color to the Koolaid Jar
             theInputTag.addEventListener("input", function() {
-                let theColorValue = theInputTag.value;
-                toggleCanvas(theColorValue)
+                //let theColorValue = theInputTag.value;
+                hue = theInputTag.value;
+                toggleCanvas(hue);
                 }, true);
         }else{
-            //Ensure custom list item shows
+            //Ensure custom list item hides
             document.getElementById("favColor").style.display = 'none';
 
             //Pass the color to the koolaid jar
-            toggleCanvas(this.innerText);
+            hue = this.innerText;
+            toggleCanvas(hue);
         }
 
        
     }
   });
-
 
 //Get position of what I'm clicking on in this case canvas.
 function getElementPosition(obj) {
@@ -351,6 +331,7 @@ function getEventLocation(element,event){
     };
 }
 
+//AddEventListener Function 
 function addEventListener(element, type, fn) {
     if (element.addEventListener){
         element.addEventListener(type, fn, false); 
@@ -359,6 +340,29 @@ function addEventListener(element, type, fn) {
     }
 }
 
+// Controls if element on canvas are inverted or not.
+function toggleCanvas(color){
+    if (flippedVar){
+        loadAllInverted(color);
+    }else{
+        loadAll(color);
+    }
+}
+
+//Functions to load Canvas and all Items on Canvas.
+function loadAllInverted(color){
+    loadCanvas(color);
+    loadCanvas.drawJugInverted();
+    loadCanvas.drawCups();
+    loadCanvas.drawSurface();
+}
+
+function loadAll(color){
+    loadCanvas(color);
+    loadCanvas.drawJug();
+    loadCanvas.drawCups();
+    loadCanvas.drawSurface();
+}
 
 //Add function when the canvas is clicked
 addEventListener(canvas,"click",function(event){
@@ -376,10 +380,15 @@ addEventListener(canvas,"click",function(event){
         console.log("Outside Jug body and handle");
     }else{
         console.log("Inside Jug");
-        addEventListener(canvas, "mousedown", function(event){
-            flippedVar = true;
-            toggleCanvas();
-        }, false);
+        //Toggle position on click if inside jug
+            if (flippedVar == true){
+                flippedVar = false;
+                toggleCanvas(hue);
+            }else{
+                flippedVar = true;
+                toggleCanvas(hue);
+            }
+            
         
         
     }
