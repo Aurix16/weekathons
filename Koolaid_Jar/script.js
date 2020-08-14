@@ -410,9 +410,9 @@ function onDrag(){
         addEventListener(canvas, 'mousemove', moveListener)
         let upListener = () => {
             if (moved) {
-                console.log('moved')
+                console.log('dragged');
             } else {
-                console.log('not moved')
+                console.log('not dragged');
             }
         }
         addEventListener(canvas,'mouseup', upListener)
