@@ -411,8 +411,10 @@ function onDrag(){
         let upListener = () => {
             if (moved) {
                 console.log('The mouse was dragged, Drag registers on mouse up.');
+                // Move the jug
             } else {
                 console.log("The mouse wasn't dragged.");
+                //Do nothing
             }
         }
         addEventListener(canvas,'mouseup', upListener)
