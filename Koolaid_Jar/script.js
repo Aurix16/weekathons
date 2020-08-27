@@ -414,7 +414,7 @@ function onDrag(){
                 // Move the jug
             } else {
                 console.log("The mouse wasn't dragged.");
-                //Do nothing
+                //Canvas shouduld stay in current position
             }
         }
         addEventListener(canvas,'mouseup', upListener)
